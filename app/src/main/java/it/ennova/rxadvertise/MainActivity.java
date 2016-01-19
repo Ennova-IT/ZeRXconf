@@ -1,13 +1,17 @@
 package it.ennova.rxadvertise;
 
-import android.content.Context;
-import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, NsdManager.RegistrationListener{
+import rx.Subscription;
+import rx.functions.Action1;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Subscription s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,34 +22,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        NsdServiceInfo serviceInfo  = new NsdServiceInfo();
-        serviceInfo.setServiceName("NsdChat");
-        serviceInfo.setServiceType("_http._tcp.");
-        serviceInfo.setPort(4344);
-
-        NsdManager nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
-
-        nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, this);
+        if (s == null || s.isUnsubscribed()) {
+            s = NsdObservable.advertise(this, "NSD Service", "_http._tcp.", 888)
+                    .subscribe(new Action1<NsdServiceInfo>() {
+                        @Override
+                        public void call(NsdServiceInfo nsdServiceInfo) {
+                            makeMessage("Servizio " + nsdServiceInfo.getServiceName());
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            makeMessage(throwable.getMessage());
+                        }
+                    });
+        } else {
+            s.unsubscribe();
+        }
     }
 
-    @Override
-    public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
-        //onError
-    }
-
-    @Override
-    public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
-        //onError
-    }
-
-    @Override
-    public void onServiceRegistered(NsdServiceInfo serviceInfo) {
-        //onNext - con info del servizio
-
-    }
-
-    @Override
-    public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
-        //do nothing
+    private void makeMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
