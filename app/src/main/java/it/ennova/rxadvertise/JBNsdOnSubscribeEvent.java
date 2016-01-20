@@ -17,7 +17,7 @@ import rx.subscriptions.Subscriptions;
 class JBNsdOnSubscribeEvent implements
         NsdManager.RegistrationListener, NsdOnSubscribeEvent {
 
-    private NsdServiceInfo nsdServiceInfo;
+    protected NsdServiceInfo nsdServiceInfo;
     private Context context;
     private Subscriber<? super NsdServiceInfo> subscriber;
     private NsdManager nsdManager;
