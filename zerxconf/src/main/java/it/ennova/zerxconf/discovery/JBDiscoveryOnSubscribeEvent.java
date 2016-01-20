@@ -1,10 +1,11 @@
-package it.ennova.zerxconf;
+package it.ennova.zerxconf.discovery;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 
+import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -12,12 +13,12 @@ import rx.subscriptions.Subscriptions;
 /**
  *
  */
-class JBDiscoveryOnSubscribeEvent implements
+public class JBDiscoveryOnSubscribeEvent implements
         NsdManager.RegistrationListener, DiscoveryOnSubscribeEvent {
 
     protected NsdServiceInfo nsdServiceInfo;
     private Context context;
-    private Subscriber<? super NsdServiceInfo> subscriber;
+    private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
     private NsdManager nsdManager;
 
     public JBDiscoveryOnSubscribeEvent(@NonNull Context context,
@@ -34,7 +35,7 @@ class JBDiscoveryOnSubscribeEvent implements
     }
 
     @Override
-    public void call(final Subscriber<? super NsdServiceInfo> subscriber) {
+    public void call(final Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         this.subscriber = subscriber;
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         nsdManager.registerService(nsdServiceInfo, NsdManager.PROTOCOL_DNS_SD, this);
@@ -78,7 +79,7 @@ class JBDiscoveryOnSubscribeEvent implements
     @Override
     public void onServiceRegistered(NsdServiceInfo serviceInfo) {
         if (!subscriber.isUnsubscribed()) {
-            subscriber.onNext(serviceInfo);
+            subscriber.onNext(NetworkServiceDiscoveryInfo.from(serviceInfo));
         }
     }
 

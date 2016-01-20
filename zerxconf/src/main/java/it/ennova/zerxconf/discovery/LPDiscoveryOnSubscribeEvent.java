@@ -1,4 +1,4 @@
-package it.ennova.zerxconf;
+package it.ennova.zerxconf.discovery;
 
 import android.annotation.TargetApi;
 import android.content.Context;
