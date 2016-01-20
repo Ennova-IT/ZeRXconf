@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Action0;
+import rx.subscriptions.Subscriptions;
 
 /**
  *
@@ -34,10 +36,29 @@ class JBNsdOnSubscribeEvent implements
     }
 
     @Override
-    public void call(Subscriber<? super NsdServiceInfo> subscriber) {
+    public void call(final Subscriber<? super NsdServiceInfo> subscriber) {
         this.subscriber = subscriber;
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         nsdManager.registerService(nsdServiceInfo, NsdManager.PROTOCOL_DNS_SD, this);
+        subscriber.add(Subscriptions.create(dismissAction));
+    }
+
+    private final Action0 dismissAction = new Action0() {
+        @Override
+        public void call() {
+            dismiss();
+        }
+    };
+
+    private void dismiss() {
+        if (nsdManager != null) {
+            nsdManager.unregisterService(this);
+        }
+    }
+
+    @Override
+    public Action0 onCompleted() {
+        return dismissAction;
     }
 
     @Override
@@ -69,21 +90,4 @@ class JBNsdOnSubscribeEvent implements
         nsdManager = null;
     }
 
-    private void dismiss() {
-        if (nsdManager != null) {
-            nsdManager.unregisterService(this);
-        }
-    }
-
-    private final Action0 dismissAction = new Action0() {
-        @Override
-        public void call() {
-            dismiss();
-        }
-    };
-
-    @Override
-    public Action0 getDismissAction() {
-        return dismissAction;
-    }
 }

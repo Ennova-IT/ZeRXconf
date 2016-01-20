@@ -17,8 +17,6 @@ public class JBNsdObservable {
                                                        int servicePort) {
 
         NsdOnSubscribeEvent onSubscribe = new JBNsdOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
-        return Observable.create(onSubscribe)
-                .doOnUnsubscribe(onSubscribe.getDismissAction())
-                .doOnCompleted(onSubscribe.getDismissAction());
+        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
     }
  }

@@ -9,5 +9,5 @@ import rx.functions.Action0;
  *
  */
 public interface NsdOnSubscribeEvent extends Observable.OnSubscribe<NsdServiceInfo> {
-    Action0 getDismissAction();
+    Action0 onCompleted();
 }
