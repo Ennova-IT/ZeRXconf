@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (s == null || s.isUnsubscribed()) {
-            s = NsdObservable.advertise(this, "NSD Service", "_http._tcp.", 888)
+            s = JBNsdObservable.advertise(this, "NSD Service", "_http._tcp.", 888)
                     .subscribe(new Action1<NsdServiceInfo>() {
                         @Override
                         public void call(NsdServiceInfo nsdServiceInfo) {

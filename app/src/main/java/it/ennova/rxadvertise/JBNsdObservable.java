@@ -9,14 +9,15 @@ import rx.Observable;
 /**
  *
  */
-public class NsdObservable {
+public class JBNsdObservable {
 
     public static Observable<NsdServiceInfo> advertise(@NonNull Context context,
                                                        @NonNull String serviceName,
                                                        @NonNull String serviceLayer,
-                                                       @NonNull int servicePort) {
+                                                       int servicePort) {
 
-        NsdOnSubscribeEvent onSubscribe = new NsdOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
-        return Observable.create(onSubscribe).doOnUnsubscribe(onSubscribe.dismissAction);
+        NsdOnSubscribeEvent onSubscribe = new JBNsdOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
+        return Observable.create(onSubscribe)
+                .doOnUnsubscribe(onSubscribe.getDismissAction());
     }
  }
