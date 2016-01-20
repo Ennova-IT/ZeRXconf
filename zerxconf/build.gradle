@@ -1,11 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 'Google Inc.:Google APIs:23'
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "it.ennova.rxadvertise"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
@@ -21,6 +20,8 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.+'
-    compile project(':zerxconf')
+    compile 'com.android.support:support-annotations:23.1.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile files('libs/jmdns-3.4.2.jar')
 }

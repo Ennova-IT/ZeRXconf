@@ -1,4 +1,4 @@
-package it.ennova.rxadvertise;
+package it.ennova.zerxconf;
 
 import android.net.nsd.NsdServiceInfo;
 
@@ -8,6 +8,6 @@ import rx.functions.Action0;
 /**
  *
  */
-public interface NsdOnSubscribeEvent extends Observable.OnSubscribe<NsdServiceInfo> {
+public interface DiscoveryOnSubscribeEvent extends Observable.OnSubscribe<NsdServiceInfo> {
     Action0 onCompleted();
 }

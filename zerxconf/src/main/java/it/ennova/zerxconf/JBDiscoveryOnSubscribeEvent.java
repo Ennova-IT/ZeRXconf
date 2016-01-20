@@ -1,31 +1,29 @@
-package it.ennova.rxadvertise;
+package it.ennova.zerxconf;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 
-import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 /**
  *
  */
-class JBNsdOnSubscribeEvent implements
-        NsdManager.RegistrationListener, NsdOnSubscribeEvent {
+class JBDiscoveryOnSubscribeEvent implements
+        NsdManager.RegistrationListener, DiscoveryOnSubscribeEvent {
 
     protected NsdServiceInfo nsdServiceInfo;
     private Context context;
     private Subscriber<? super NsdServiceInfo> subscriber;
     private NsdManager nsdManager;
 
-    public JBNsdOnSubscribeEvent(@NonNull Context context,
-                                 @NonNull String serviceName,
-                                 @NonNull String serviceLayer,
-                                 int servicePort) {
+    public JBDiscoveryOnSubscribeEvent(@NonNull Context context,
+                                       @NonNull String serviceName,
+                                       @NonNull String serviceLayer,
+                                       int servicePort) {
 
         nsdServiceInfo = new NsdServiceInfo();
         nsdServiceInfo.setServiceName(serviceName);

@@ -1,4 +1,4 @@
-package it.ennova.rxadvertise;
+package it.ennova.zerxconf;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,13 +12,13 @@ import java.util.Map;
  *
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class LPNsdOnSubscribeEvent extends JBNsdOnSubscribeEvent {
+public class LPDiscoveryOnSubscribeEvent extends JBDiscoveryOnSubscribeEvent {
 
-    public LPNsdOnSubscribeEvent(@NonNull Context context,
-                                 @NonNull String serviceName,
-                                 @NonNull String serviceLayer,
-                                 int servicePort,
-                                 @Nullable Map<String, String> attributes) {
+    public LPDiscoveryOnSubscribeEvent(@NonNull Context context,
+                                       @NonNull String serviceName,
+                                       @NonNull String serviceLayer,
+                                       int servicePort,
+                                       @Nullable Map<String, String> attributes) {
 
         super(context, serviceName, serviceLayer, servicePort);
         if (attributes != null) {

@@ -1,4 +1,4 @@
-package it.ennova.rxadvertise;
+package it.ennova.zerxconf;
 
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
@@ -21,11 +21,11 @@ public class JBNsdObservable {
                                                        int servicePort,
                                                        @Nullable Map<String, String> attributes) {
 
-        NsdOnSubscribeEvent onSubscribe;
+        DiscoveryOnSubscribeEvent onSubscribe;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            onSubscribe = new LPNsdOnSubscribeEvent(context, serviceName, serviceLayer, servicePort, attributes);
+            onSubscribe = new LPDiscoveryOnSubscribeEvent(context, serviceName, serviceLayer, servicePort, attributes);
         } else {
-            onSubscribe = new JBNsdOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
+            onSubscribe = new JBDiscoveryOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
         }
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
     }
