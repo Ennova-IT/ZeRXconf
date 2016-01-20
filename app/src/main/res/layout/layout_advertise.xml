@@ -30,14 +30,14 @@
             android:id="@+id/txtServiceType"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:hint="@string/service_type_hint" />
 
         <EditText
             android:id="@+id/txtServicePort"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:inputType="number"
             android:hint="@string/service_port_hint" />
 
@@ -48,19 +48,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/serviceDetailsLayout"
-        android:text="Force native Android API" />
+        android:text="Force native Android API"
+        android:checked="true"
+        android:padding="16dp"/>
 
     <Switch
         android:id="@+id/switchEmptyAttributeSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/switchNativeApi"
+        android:padding="16dp"
         android:text="Empty attribute set" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/switchEmptyAttributeSet">
+        android:layout_below="@id/switchEmptyAttributeSet"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -88,6 +92,13 @@
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
             android:text="Start" />
+
+        <Button
+            android:id="@+id/btnStopService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:text="Stop" />
     </ViewFlipper>
 
 </RelativeLayout>

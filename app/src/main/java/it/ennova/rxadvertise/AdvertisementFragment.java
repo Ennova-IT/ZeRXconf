@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,25 +32,20 @@ public class AdvertisementFragment extends Fragment {
     private final Map<String, String> emptyAttributes = new HashMap<>(0);
     private boolean forceNative = false;
     private boolean forceEmptySet = false;
-
-    private static final String SERVICE_NAME = "Skillo";
-    private static final String SERVICE_LAYER = "_http._tcp.";
-    private static final int SERVICE_PORT = 888;
+    private Subscription subscription;
 
     @Bind(R.id.imgAdvertiseStatus)
     ImageView imgAdvertiseStatus;
     @Bind(R.id.switchEmptyAttributeSet)
     Switch switchEmptyAttributes;
-    private Subscription s;
-
     @Bind(R.id.txtServiceName)
     EditText txtServiceName;
-
     @Bind(R.id.txtServiceType)
     EditText txtServiceType;
-
     @Bind(R.id.txtServicePort)
     EditText txtServicePort;
+    @Bind(R.id.advertisingViewFlipper)
+    ViewFlipper viewFlipper;
 
 
     public AdvertisementFragment() {
@@ -61,15 +57,41 @@ public class AdvertisementFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_advertise, container, false);
         ButterKnife.bind(this, rootView);
-
-        attributes.put("canConfigure", "NO");
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        buildDefaultData();
+        prepareViewFlipper();
+    }
+
+    private void buildDefaultData() {
+        attributes.put("canConfigure", "NO");
+        txtServiceName.setText("ZeRXconf");
+        txtServiceType.setText("_http._tcp.");
+        txtServicePort.setText("1234");
+    }
+
+    private void prepareViewFlipper() {
+        viewFlipper.setInAnimation(getActivity(), android.R.anim.slide_in_left);
+        viewFlipper.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
+    }
 
     @OnCheckedChanged(R.id.switchNativeApi)
     void onNativeApiCheckedChanged(boolean isChecked) {
         forceNative = isChecked;
+        fixEmptyAttributeEnabledState(isChecked);
+    }
+
+    private void fixEmptyAttributeEnabledState(boolean isChecked) {
+        if (!isChecked) {
+            switchEmptyAttributes.setChecked(true);
+            switchEmptyAttributes.setEnabled(false);
+        } else {
+            switchEmptyAttributes.setEnabled(true);
+        }
     }
 
     @OnCheckedChanged(R.id.switchEmptyAttributeSet)
@@ -79,16 +101,20 @@ public class AdvertisementFragment extends Fragment {
 
     @OnClick(R.id.btnAdvertiseService)
     void onAdvertisementButtonClicked() {
-        if (s == null || s.isUnsubscribed()) {
-            s = ZeRXconf.advertise(getActivity(), SERVICE_NAME, SERVICE_LAYER, SERVICE_PORT, getAttributes(), forceNative)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onNext, onError);
-        } else {
-            s.unsubscribe();
-            imgAdvertiseStatus.setImageResource(R.drawable.ic_remove_circle_red_500_18dp);
-        }
 
+        subscription = ZeRXconf.advertise(getActivity(), txtServiceName.getText().toString(), txtServiceType.getText().toString(),
+                Integer.valueOf(txtServicePort.getText().toString()), getAttributes(), forceNative)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError);
+
+    }
+
+    @OnClick(R.id.btnStopService)
+    void onStopAdvertisementButtonClicked() {
+        subscription.unsubscribe();
+        imgAdvertiseStatus.setImageResource(R.drawable.ic_remove_circle_red_500_18dp);
+        viewFlipper.showPrevious();
     }
 
     private Map<String, String> getAttributes() {
@@ -99,6 +125,7 @@ public class AdvertisementFragment extends Fragment {
         @Override
         public void call(NetworkServiceDiscoveryInfo networkServiceDiscoveryInfo) {
             imgAdvertiseStatus.setImageResource(R.drawable.ic_check_circle_green_500_18dp);
+            viewFlipper.showNext();
         }
     };
 
