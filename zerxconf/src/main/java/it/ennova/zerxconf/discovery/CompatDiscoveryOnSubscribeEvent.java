@@ -3,7 +3,6 @@ package it.ennova.zerxconf.discovery;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.jmdns.JmDNS;
@@ -14,9 +13,7 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-/**
- *
- */
+
 public class CompatDiscoveryOnSubscribeEvent implements DiscoveryOnSubscribeEvent {
 
     private ServiceInfo serviceInfo;

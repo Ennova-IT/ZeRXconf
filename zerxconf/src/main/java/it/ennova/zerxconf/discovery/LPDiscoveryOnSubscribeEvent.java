@@ -8,9 +8,6 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-/**
- *
- */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class LPDiscoveryOnSubscribeEvent extends JBDiscoveryOnSubscribeEvent {
 

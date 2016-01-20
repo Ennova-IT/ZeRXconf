@@ -10,9 +10,7 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-/**
- *
- */
+
 public class JBDiscoveryOnSubscribeEvent implements
         NsdManager.RegistrationListener, DiscoveryOnSubscribeEvent {
 
