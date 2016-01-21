@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class DiscoveryFragment extends Fragment implements NsdManager.DiscoveryListener{
 
     public DiscoveryFragment() {
@@ -18,7 +21,9 @@ public class DiscoveryFragment extends Fragment implements NsdManager.DiscoveryL
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.layout_discovery, container, false);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     @Override
@@ -53,6 +58,16 @@ public class DiscoveryFragment extends Fragment implements NsdManager.DiscoveryL
 
     @Override
     public void onServiceLost(NsdServiceInfo serviceInfo) {
+
+    }
+
+    @OnClick(R.id.btnStartService)
+    void onStartServiceClicked() {
+
+    }
+
+    @OnClick(R.id.btnStopService)
+    void onStopServiceClicked() {
 
     }
 }

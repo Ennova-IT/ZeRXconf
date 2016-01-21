@@ -64,7 +64,7 @@ public class AdvertisementFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         buildDefaultData();
-        prepareViewFlipper();
+        ViewFlipperUtils.initAnimationOn(viewFlipper, getActivity());
     }
 
     private void buildDefaultData() {
@@ -72,11 +72,6 @@ public class AdvertisementFragment extends Fragment {
         txtServiceName.setText(BuildConfig.DEFAULT_SERVICE_NAME);
         txtServiceType.setText(BuildConfig.DEFAULT_SERVICE_TYPE);
         txtServicePort.setText(BuildConfig.DEFAULT_SERVICE_PORT);
-    }
-
-    private void prepareViewFlipper() {
-        viewFlipper.setInAnimation(getActivity(), android.R.anim.slide_in_left);
-        viewFlipper.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
     }
 
     @OnCheckedChanged(R.id.switchNativeApi)
