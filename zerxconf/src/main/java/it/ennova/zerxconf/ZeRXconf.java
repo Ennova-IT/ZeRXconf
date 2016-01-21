@@ -7,8 +7,11 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
+import javax.jmdns.ServiceEvent;
+
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
+import it.ennova.zerxconf.discovery.CompatOnSubscribeEvent;
 import it.ennova.zerxconf.discovery.JBDiscoveryOnSubscribeEvent;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
@@ -63,6 +66,13 @@ public class ZeRXconf {
                                                              @NonNull String protocol) {
 
         OnSubscribeEvent<NsdServiceInfo> onSubscribe = new JBDiscoveryOnSubscribeEvent(context, protocol);
+        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
+    }
+
+    public static Observable<ServiceEvent> startDiscoveryCompat (@NonNull Context context,
+                                                                 @NonNull String protocol) {
+
+        OnSubscribeEvent<ServiceEvent> onSubscribe = new CompatOnSubscribeEvent(context, protocol);
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
     }
 

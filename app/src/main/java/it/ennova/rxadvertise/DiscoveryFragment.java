@@ -1,7 +1,9 @@
 package it.ennova.rxadvertise;
 
 
+import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import java.io.IOException;
+import java.net.InetAddress;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,11 +30,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class DiscoveryFragment extends Fragment{
+public class DiscoveryFragment extends Fragment {
 
     @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
     private Subscription subscription;
+
+    private JmDNS jmDNS;
 
     public DiscoveryFragment() {
     }
@@ -46,17 +57,33 @@ public class DiscoveryFragment extends Fragment{
 
     @OnClick(R.id.btnStartService)
     void onStartServiceClicked() {
-        subscription = ZeRXconf.startDiscovery(getActivity())
+//        subscription = ZeRXconf.startDiscovery(getActivity())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(onNext, onError);
+
+        subscription = ZeRXconf.startDiscoveryCompat(getActivity(), "_teamviewer._tcp")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError);
+                .subscribe(onNext2, onError);
+
+        viewFlipper.showNext();
     }
+
 
     private Action1<NsdServiceInfo> onNext = new Action1<NsdServiceInfo>() {
         @Override
         public void call(NsdServiceInfo serviceInfo) {
             viewFlipper.showNext();
             Log.d("ZERXCONF-Discovery", "Service found: " + serviceInfo.getServiceName() + serviceInfo.getServiceType());
+        }
+    };
+
+    private Action1<ServiceEvent> onNext2 = new Action1<ServiceEvent>() {
+        @Override
+        public void call(ServiceEvent serviceInfo) {
+            viewFlipper.showNext();
+            Log.d("ZERXCONF-Discovery", "Service found: " + serviceInfo.getName() + serviceInfo.getType());
         }
     };
 
