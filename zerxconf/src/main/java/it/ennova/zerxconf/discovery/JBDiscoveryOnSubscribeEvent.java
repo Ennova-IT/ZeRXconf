@@ -13,9 +13,6 @@ import rx.subscriptions.Subscriptions;
 
 import static it.ennova.zerxconf.exceptions.NsdException.*;
 
-/**
- *
- */
 public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceInfo> {
 
     private NsdManager nsdManager;
