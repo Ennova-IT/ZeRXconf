@@ -17,6 +17,6 @@
 
     <include layout="@layout/service_status_layout" />
 
-    <include layout="@layout/service_command_layout" />
+    <include layout="@layout/command_layout" />
 
 </LinearLayout>

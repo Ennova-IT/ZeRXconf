@@ -3,4 +3,6 @@
     <string name="service_name_hint">Service name</string>
     <string name="service_type_hint">Service type</string>
     <string name="service_port_hint">Port</string>
+    <string name="start_label">Start</string>
+    <string name="stop_label">Stop</string>
 </resources>

@@ -1,6 +1,5 @@
 package it.ennova.rxadvertise;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -100,7 +99,7 @@ public class AdvertisementFragment extends Fragment {
         forceEmptySet = isChecked;
     }
 
-    @OnClick(R.id.btnAdvertiseService)
+    @OnClick(R.id.btnStartService)
     void onAdvertisementButtonClicked() {
 
         subscription = ZeRXconf.advertise(getActivity(), txtServiceName.getText().toString(), txtServiceType.getText().toString(),
