@@ -8,13 +8,14 @@ import java.util.Map;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
+import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 
-public class CompatAdvertiseOnSubscribeEvent implements AdvertiseOnSubscribeEvent {
+public class CompatAdvertiseOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDiscoveryInfo> {
 
     private ServiceInfo serviceInfo;
     private final NetworkServiceDiscoveryInfo nsdServiceInfo;

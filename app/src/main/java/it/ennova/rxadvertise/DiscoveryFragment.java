@@ -1,8 +1,6 @@
 package it.ennova.rxadvertise;
 
 
-import android.content.Context;
-import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,19 +9,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import it.ennova.zerxconf.ZeRXconf;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class DiscoveryFragment extends Fragment{
 
-    private NsdManager nsdManager;
-    private static final String TAG = "ZERXCONF-Discovery";
-
     @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
+    private Subscription subscription;
 
     public DiscoveryFragment() {
     }
@@ -39,68 +41,36 @@ public class DiscoveryFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nsdManager = (NsdManager) getActivity().getSystemService(Context.NSD_SERVICE);
         ViewFlipperUtils.initAnimationOn(viewFlipper, getActivity());
     }
 
     @OnClick(R.id.btnStartService)
     void onStartServiceClicked() {
-        nsdManager.discoverServices("_services._dns-sd._udp", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-        viewFlipper.showNext();
+        subscription = ZeRXconf.startDiscovery(getActivity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError);
     }
+
+    private Action1<NsdServiceInfo> onNext = new Action1<NsdServiceInfo>() {
+        @Override
+        public void call(NsdServiceInfo serviceInfo) {
+            viewFlipper.showNext();
+            Log.d("ZERXCONF-Discovery", "Service found: " + serviceInfo.getServiceName() + serviceInfo.getServiceType());
+        }
+    };
+
+    private Action1<Throwable> onError = new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+            Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @OnClick(R.id.btnStopService)
     void onStopServiceClicked() {
-        nsdManager.stopServiceDiscovery(discoveryListener);
+        subscription.unsubscribe();
         viewFlipper.showPrevious();
     }
 
-    private final NsdManager.ResolveListener resolveListener = new NsdManager.ResolveListener() {
-
-        @Override
-        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-            Log.d(TAG, "onResolveFailed(" + serviceInfo.getServiceType() + "," + errorCode +")");
-        }
-
-        @Override
-        public void onServiceResolved(NsdServiceInfo serviceInfo) {
-            Log.d(TAG, "onServiceResolved(" + serviceInfo.getServiceName() +")");
-        }
-    };
-
-    private final NsdManager.DiscoveryListener discoveryListener = new NsdManager.DiscoveryListener() {
-
-        @Override
-        public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-            Log.d(TAG, "onStartDiscoveryFailed(" + serviceType + "," + errorCode +")");
-            nsdManager.stopServiceDiscovery(this);
-        }
-
-        @Override
-        public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-            Log.d(TAG, "onStopDiscoveryFailed(" + serviceType + "," + errorCode +")");
-            nsdManager.stopServiceDiscovery(this);
-        }
-
-        @Override
-        public void onDiscoveryStarted(String serviceType) {
-            Log.d(TAG, "onDiscoveryStarted(" + serviceType +")");
-        }
-
-        @Override
-        public void onDiscoveryStopped(String serviceType) {
-            Log.d(TAG, "onDiscoveryStopped(" + serviceType +")");
-        }
-
-        @Override
-        public void onServiceFound(NsdServiceInfo serviceInfo) {
-            Log.d(TAG, "onServiceFound(" + serviceInfo.getServiceName() +")");
-            nsdManager.resolveService(serviceInfo, resolveListener);
-        }
-
-        @Override
-        public void onServiceLost(NsdServiceInfo serviceInfo) {
-            Log.d(TAG, "onServiceLost(" + serviceInfo.getServiceName() +")");
-        }
-    };
 }

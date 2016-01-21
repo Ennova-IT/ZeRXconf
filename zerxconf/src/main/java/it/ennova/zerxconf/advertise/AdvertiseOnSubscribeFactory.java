@@ -8,16 +8,18 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
+import it.ennova.zerxconf.common.OnSubscribeEvent;
+import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import it.ennova.zerxconf.utils.MapUtils;
 
 public class AdvertiseOnSubscribeFactory {
 
-    public static AdvertiseOnSubscribeEvent from(@NonNull Context context,
-                                                 @NonNull String serviceName,
-                                                 @NonNull String serviceLayer,
-                                                 int servicePort,
-                                                 @Nullable Map<String, String> attributes,
-                                                 boolean forceNative) {
+    public static OnSubscribeEvent<NetworkServiceDiscoveryInfo> from(@NonNull Context context,
+                                                                     @NonNull String serviceName,
+                                                                     @NonNull String serviceLayer,
+                                                                     int servicePort,
+                                                                     @Nullable Map<String, String> attributes,
+                                                                     boolean forceNative) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && forceNative) {
             return buildNativeOnSubscribeEventFrom(context, serviceName, serviceLayer, servicePort, attributes);
@@ -26,11 +28,11 @@ public class AdvertiseOnSubscribeFactory {
         }
     }
 
-    private static AdvertiseOnSubscribeEvent buildNativeOnSubscribeEventFrom(@NonNull Context context,
-                                                                             @NonNull String serviceName,
-                                                                             @NonNull String serviceLayer,
-                                                                             int servicePort,
-                                                                             @Nullable Map<String, String> attributes) {
+    private static OnSubscribeEvent<NetworkServiceDiscoveryInfo> buildNativeOnSubscribeEventFrom(@NonNull Context context,
+                                                                                                 @NonNull String serviceName,
+                                                                                                 @NonNull String serviceLayer,
+                                                                                                 int servicePort,
+                                                                                                 @Nullable Map<String, String> attributes) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !MapUtils.isEmpty(attributes)) {

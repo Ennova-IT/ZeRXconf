@@ -1,13 +1,15 @@
 package it.ennova.zerxconf;
 
 import android.content.Context;
+import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeEvent;
+import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
+import it.ennova.zerxconf.discovery.JBDiscoveryOnSubscribeEvent;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
 
@@ -17,6 +19,8 @@ import rx.Observable;
  * @see #advertise(Context, String, String, int, Map, boolean) Advertising a new service
  */
 public class ZeRXconf {
+
+    public static final String ALL_AVAILABLE_SERVICES = "_services._dns-sd._udp";
 
     private ZeRXconf() {
         throw new IllegalStateException();
@@ -45,9 +49,20 @@ public class ZeRXconf {
                                                                     @Nullable Map<String, String> attributes,
                                                                     boolean forceNative) {
 
-        AdvertiseOnSubscribeEvent onSubscribe = AdvertiseOnSubscribeFactory.from(context, serviceName, serviceLayer,
+        OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = AdvertiseOnSubscribeFactory.from(context, serviceName, serviceLayer,
                 servicePort, attributes, forceNative);
 
+        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
+    }
+
+    public static Observable<NsdServiceInfo> startDiscovery (@NonNull Context context) {
+        return startDiscovery(context, ALL_AVAILABLE_SERVICES);
+    }
+
+    public static Observable<NsdServiceInfo> startDiscovery (@NonNull Context context,
+                                                             @NonNull String protocol) {
+
+        OnSubscribeEvent<NsdServiceInfo> onSubscribe = new JBDiscoveryOnSubscribeEvent(context, protocol);
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
     }
 
