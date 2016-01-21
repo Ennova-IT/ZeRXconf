@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,10 +12,11 @@
     tools:context="it.ennova.rxadvertise.MainActivity">
 
 
-    <include layout="@layout/service_data_layout" />
+    <include android:id="@+id/service_data_layout"
+        layout="@layout/service_data_layout" />
 
     <include layout="@layout/service_status_layout" />
 
     <include layout="@layout/service_command_layout" />
 
-</RelativeLayout>
+</LinearLayout>
