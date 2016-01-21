@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RxAdvertise</string>
+    <string name="app_name">ZeRXConf App</string>
     <string name="service_name_hint">Service name</string>
     <string name="service_type_hint">Service type</string>
     <string name="service_port_hint">Port</string>

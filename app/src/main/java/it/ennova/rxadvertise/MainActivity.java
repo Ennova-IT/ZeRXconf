@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupViewPager();
         tabLayout.setupWithViewPager(viewPager);

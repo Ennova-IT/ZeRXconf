@@ -3,102 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:fitsSystemWindows="true"
     tools:context="it.ennova.rxadvertise.MainActivity">
 
 
-    <EditText
-        android:id="@+id/txtServiceName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/service_name_hint" />
+    <include layout="@layout/service_data_layout" />
 
-    <LinearLayout
-        android:id="@+id/serviceDetailsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtServiceName"
-        android:orientation="horizontal"
-        android:weightSum="10">
+    <include layout="@layout/service_status_layout" />
 
-        <EditText
-            android:id="@+id/txtServiceType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:hint="@string/service_type_hint" />
-
-        <EditText
-            android:id="@+id/txtServicePort"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:inputType="number"
-            android:hint="@string/service_port_hint" />
-
-    </LinearLayout>
-
-    <Switch
-        android:id="@+id/switchNativeApi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/serviceDetailsLayout"
-        android:text="Force native Android API"
-        android:checked="true"
-        android:padding="16dp"/>
-
-    <Switch
-        android:id="@+id/switchEmptyAttributeSet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/switchNativeApi"
-        android:padding="16dp"
-        android:text="Empty attribute set" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/switchEmptyAttributeSet"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Status" />
-
-        <ImageView
-            android:id="@+id/imgAdvertiseStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_remove_circle_red_500_18dp" />
-    </RelativeLayout>
-
-    <ViewFlipper
-        android:id="@+id/advertisingViewFlipper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/btnAdvertiseService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:text="Start" />
-
-        <Button
-            android:id="@+id/btnStopService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:text="Stop" />
-    </ViewFlipper>
+    <include layout="@layout/service_command_layout" />
 
 </RelativeLayout>
