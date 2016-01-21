@@ -1,4 +1,4 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.advertise;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +14,13 @@ import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 
-public class CompatDiscoveryOnSubscribeEvent implements DiscoveryOnSubscribeEvent {
+public class CompatAdvertiseOnSubscribeEvent implements AdvertiseOnSubscribeEvent {
 
     private ServiceInfo serviceInfo;
     private final NetworkServiceDiscoveryInfo nsdServiceInfo;
     private JmDNS jmDNS;
 
-    public CompatDiscoveryOnSubscribeEvent(@NonNull String serviceName,
+    public CompatAdvertiseOnSubscribeEvent(@NonNull String serviceName,
                                            @NonNull String serviceLayer,
                                            int servicePort,
                                            @Nullable Map<String, String> attributes) {

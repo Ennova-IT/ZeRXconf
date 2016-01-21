@@ -1,4 +1,4 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.advertise;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
@@ -11,15 +11,15 @@ import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 
-public class JBDiscoveryOnSubscribeEvent implements
-        NsdManager.RegistrationListener, DiscoveryOnSubscribeEvent {
+public class JBAdvertiseOnSubscribeEvent implements
+        NsdManager.RegistrationListener, AdvertiseOnSubscribeEvent {
 
     protected NsdServiceInfo nsdServiceInfo;
     private Context context;
     private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
     private NsdManager nsdManager;
 
-    public JBDiscoveryOnSubscribeEvent(@NonNull Context context,
+    public JBAdvertiseOnSubscribeEvent(@NonNull Context context,
                                        @NonNull String serviceName,
                                        @NonNull String serviceLayer,
                                        int servicePort) {

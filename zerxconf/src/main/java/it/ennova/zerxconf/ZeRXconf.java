@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeEvent;
-import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeFactory;
+import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeEvent;
+import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
 
@@ -45,7 +45,7 @@ public class ZeRXconf {
                                                                     @Nullable Map<String, String> attributes,
                                                                     boolean forceNative) {
 
-        DiscoveryOnSubscribeEvent onSubscribe = DiscoveryOnSubscribeFactory.from(context, serviceName, serviceLayer,
+        AdvertiseOnSubscribeEvent onSubscribe = AdvertiseOnSubscribeFactory.from(context, serviceName, serviceLayer,
                 servicePort, attributes, forceNative);
 
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());

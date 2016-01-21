@@ -10,6 +10,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "DEFAULT_SERVICE_NAME", "\"ZeRXconf\""
+        buildConfigField "String", "DEFAULT_SERVICE_TYPE", "\"_http._tcp.\""
+        buildConfigField "String", "DEFAULT_SERVICE_PORT", "\"1234\""
     }
     buildTypes {
         release {

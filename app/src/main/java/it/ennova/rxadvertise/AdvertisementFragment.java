@@ -1,5 +1,6 @@
 package it.ennova.rxadvertise;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import it.ennova.zerxconf.ZeRXconf;
+import it.ennova.zerxconf.*;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -69,9 +70,9 @@ public class AdvertisementFragment extends Fragment {
 
     private void buildDefaultData() {
         attributes.put("canConfigure", "NO");
-        txtServiceName.setText("ZeRXconf");
-        txtServiceType.setText("_http._tcp.");
-        txtServicePort.setText("1234");
+        txtServiceName.setText(BuildConfig.DEFAULT_SERVICE_NAME);
+        txtServiceType.setText(BuildConfig.DEFAULT_SERVICE_TYPE);
+        txtServicePort.setText(BuildConfig.DEFAULT_SERVICE_PORT);
     }
 
     private void prepareViewFlipper() {

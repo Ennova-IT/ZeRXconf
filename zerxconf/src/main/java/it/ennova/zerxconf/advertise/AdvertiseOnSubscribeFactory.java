@@ -1,4 +1,4 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.advertise;
 
 
 import android.content.Context;
@@ -10,9 +10,9 @@ import java.util.Map;
 
 import it.ennova.zerxconf.utils.MapUtils;
 
-public class DiscoveryOnSubscribeFactory {
+public class AdvertiseOnSubscribeFactory {
 
-    public static DiscoveryOnSubscribeEvent from(@NonNull Context context,
+    public static AdvertiseOnSubscribeEvent from(@NonNull Context context,
                                                  @NonNull String serviceName,
                                                  @NonNull String serviceLayer,
                                                  int servicePort,
@@ -22,11 +22,11 @@ public class DiscoveryOnSubscribeFactory {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && forceNative) {
             return buildNativeOnSubscribeEventFrom(context, serviceName, serviceLayer, servicePort, attributes);
         } else {
-            return new CompatDiscoveryOnSubscribeEvent(serviceName, serviceLayer, servicePort, attributes);
+            return new CompatAdvertiseOnSubscribeEvent(serviceName, serviceLayer, servicePort, attributes);
         }
     }
 
-    private static DiscoveryOnSubscribeEvent buildNativeOnSubscribeEventFrom(@NonNull Context context,
+    private static AdvertiseOnSubscribeEvent buildNativeOnSubscribeEventFrom(@NonNull Context context,
                                                                              @NonNull String serviceName,
                                                                              @NonNull String serviceLayer,
                                                                              int servicePort,
@@ -35,9 +35,9 @@ public class DiscoveryOnSubscribeFactory {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !MapUtils.isEmpty(attributes)) {
 
-            return new LPDiscoveryOnSubscribeEvent(context, serviceName, serviceLayer, servicePort, attributes);
+            return new LPAdvertiseOnSubscribeEvent(context, serviceName, serviceLayer, servicePort, attributes);
         } else {
-            return new JBDiscoveryOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
+            return new JBAdvertiseOnSubscribeEvent(context, serviceName, serviceLayer, servicePort);
         }
     }
 }

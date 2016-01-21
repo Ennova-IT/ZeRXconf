@@ -1,4 +1,4 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.advertise;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 import java.util.Map;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class LPDiscoveryOnSubscribeEvent extends JBDiscoveryOnSubscribeEvent {
+public class LPAdvertiseOnSubscribeEvent extends JBAdvertiseOnSubscribeEvent {
 
-    public LPDiscoveryOnSubscribeEvent(@NonNull Context context,
+    public LPAdvertiseOnSubscribeEvent(@NonNull Context context,
                                        @NonNull String serviceName,
                                        @NonNull String serviceLayer,
                                        int servicePort,
