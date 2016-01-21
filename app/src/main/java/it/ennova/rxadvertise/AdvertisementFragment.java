@@ -44,7 +44,7 @@ public class AdvertisementFragment extends Fragment {
     EditText txtServiceType;
     @Bind(R.id.txtServicePort)
     EditText txtServicePort;
-    @Bind(R.id.advertisingViewFlipper)
+    @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
 
 
