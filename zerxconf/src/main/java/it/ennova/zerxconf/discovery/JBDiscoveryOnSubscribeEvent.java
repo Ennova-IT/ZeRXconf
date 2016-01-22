@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.exceptions.NsdException;
-import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
+import it.ennova.zerxconf.model.NsdServiceInfoWrapper;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -15,11 +15,11 @@ import rx.subscriptions.Subscriptions;
 import static it.ennova.zerxconf.exceptions.NsdException.*;
 import static it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo.*;
 
-public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDiscoveryInfo> {
+public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceInfoWrapper> {
 
     private NsdManager nsdManager;
     private final String protocol;
-    private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
+    private Subscriber<? super NsdServiceInfoWrapper> subscriber;
 
 
     public JBDiscoveryOnSubscribeEvent(@NonNull final Context context,
@@ -60,17 +60,22 @@ public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NetworkServ
 
         @Override
         public void onServiceFound(NsdServiceInfo serviceInfo) {
-            subscriber.onNext(from(serviceInfo, ADDED));
+            onNextRequested(serviceInfo, ADDED);
         }
 
         @Override
         public void onServiceLost(NsdServiceInfo serviceInfo) {
-            subscriber.onNext(from(serviceInfo, REMOVED));
+            onNextRequested(serviceInfo, REMOVED);
         }
     };
 
+    private void onNextRequested(NsdServiceInfo serviceInfo, @STATUS int status) {
+        if (!subscriber.isUnsubscribed()) {
+            subscriber.onNext(new NsdServiceInfoWrapper(serviceInfo, status));
+        }
+    }
     @Override
-    public void call(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
+    public void call(Subscriber<? super NsdServiceInfoWrapper> subscriber) {
         this.subscriber = subscriber;
         nsdManager.discoverServices(protocol, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
         subscriber.add(Subscriptions.create(dismissAction));

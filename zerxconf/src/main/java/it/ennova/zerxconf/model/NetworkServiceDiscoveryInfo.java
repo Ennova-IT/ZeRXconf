@@ -18,7 +18,7 @@ import javax.jmdns.ServiceInfo;
  * @see #from(NsdServiceInfo) Creating a new instance from the native Android API
  * @see #from(ServiceInfo, Map) Creating a new instance from the JmDNS API
  */
-public class NetworkServiceDiscoveryInfo {
+public class NetworkServiceDiscoveryInfo implements NsdStatus {
 
     @NonNull
     private final String serviceName;
@@ -30,11 +30,7 @@ public class NetworkServiceDiscoveryInfo {
     @STATUS
     private final int status;
 
-
-    public static final int ADDED = 0;
-    public static final int REMOVED = 1;
-    @IntDef({ADDED, REMOVED})
-    public @interface STATUS{}
+    final String toStringMessage;
 
     private NetworkServiceDiscoveryInfo(@NonNull String serviceName,
                                         @NonNull String serviceLayer,
@@ -47,6 +43,20 @@ public class NetworkServiceDiscoveryInfo {
         this.servicePort = servicePort;
         this.attributes = attributes;
         this.status = status;
+
+        toStringMessage = buildToStringMessage();
+    }
+
+    private String buildToStringMessage() {
+        StringBuffer buffer = new StringBuffer(serviceName)
+                .append(".")
+                .append(serviceLayer)
+                .append(":")
+                .append(servicePort)
+                .append(" - Status: ")
+                .append((isAdded()) ? "ADDED" : "REMOVED");
+
+        return buffer.toString();
     }
 
     @NonNull
@@ -68,13 +78,24 @@ public class NetworkServiceDiscoveryInfo {
         return attributes;
     }
 
+    @Override
     public boolean isAdded() {
         return status == ADDED;
+    }
+
+    @Override
+    public String toString() {
+        return toStringMessage;
     }
 
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfo source) {
         return from (source, ADDED);
+    }
+
+    @NonNull
+    public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfoWrapper wrapper) {
+        return from(wrapper.getNsdServiceInfo(), wrapper.getStatus());
     }
 
     @NonNull

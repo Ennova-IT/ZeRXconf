@@ -18,6 +18,7 @@ import it.ennova.zerxconf.discovery.JBDiscoveryOnSubscribeEvent;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -60,7 +61,7 @@ public class ZeRXconf {
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted()).compose(Transformers.networking());
     }
 
-    
+
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context) {
         return startDiscovery(context, ALL_AVAILABLE_SERVICES);
     }
@@ -68,8 +69,7 @@ public class ZeRXconf {
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
                                                                          @NonNull String protocol) {
 
-        OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = DiscoveryOnSubscribeFactory.from(context, protocol);
-        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted()).compose(Transformers.networking());
+        return DiscoveryOnSubscribeFactory.from(context, protocol);
     }
 
 
