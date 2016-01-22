@@ -98,10 +98,7 @@ public class AdvertisementFragment extends Fragment {
     void onAdvertisementButtonClicked() {
 
         subscription = ZeRXconf.advertise(getActivity(), txtServiceName.getText().toString(), txtServiceType.getText().toString(),
-                Integer.valueOf(txtServicePort.getText().toString()), getAttributes(), forceNative)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError);
+                Integer.valueOf(txtServicePort.getText().toString()), getAttributes(), forceNative).subscribe(onNext, onError);
 
     }
 

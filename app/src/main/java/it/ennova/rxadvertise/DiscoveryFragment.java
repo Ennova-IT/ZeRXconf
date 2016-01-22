@@ -1,7 +1,6 @@
 package it.ennova.rxadvertise;
 
 
-import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceEvent;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import it.ennova.zerxconf.ZeRXconf;
+import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -27,8 +25,6 @@ public class DiscoveryFragment extends Fragment {
     ViewFlipper viewFlipper;
     private Subscription subscription;
     private final String TAG = "ZeRXconf";
-
-    private JmDNS jmDNS;
 
     public DiscoveryFragment() {
     }
@@ -49,33 +45,18 @@ public class DiscoveryFragment extends Fragment {
 
     @OnClick(R.id.btnStartService)
     void onStartServiceClicked() {
-//        subscription = ZeRXconf.startDiscovery(getActivity())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(onNext, onError);
-
-//        subscription = ZeRXconf.startDiscoveryCompat(getActivity(), "_teamviewer._tcp")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(onNext2, onError);
+        subscription = ZeRXconf.startDiscovery(getActivity())
+                .subscribe(onNext, onError);
 
 
         viewFlipper.showNext();
     }
 
-    private Action1<NsdServiceInfo> onNext = new Action1<NsdServiceInfo>() {
+    private Action1<NetworkServiceDiscoveryInfo> onNext = new Action1<NetworkServiceDiscoveryInfo>() {
         @Override
-        public void call(NsdServiceInfo serviceInfo) {
+        public void call(NetworkServiceDiscoveryInfo serviceInfo) {
             viewFlipper.showNext();
-            Log.d("ZERXCONF-Discovery", "Service found: " + serviceInfo.getServiceName() + serviceInfo.getServiceType());
-        }
-    };
-
-    private Action1<ServiceEvent> onNext2 = new Action1<ServiceEvent>() {
-        @Override
-        public void call(ServiceEvent serviceInfo) {
-            viewFlipper.showNext();
-            Log.d("ZERXCONF-Discovery", "Service found: " + serviceInfo.getName() + serviceInfo.getType());
+            Log.d("ZERXCONF-Discovery", serviceInfo.toString());
         }
     };
 
@@ -88,7 +69,7 @@ public class DiscoveryFragment extends Fragment {
 
     @OnClick(R.id.btnStopService)
     void onStopServiceClicked() {
-//        subscription.unsubscribe();
+        subscription.unsubscribe();
         viewFlipper.showPrevious();
     }
 

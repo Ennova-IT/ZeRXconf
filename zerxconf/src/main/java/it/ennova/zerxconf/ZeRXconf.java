@@ -11,10 +11,14 @@ import javax.jmdns.ServiceEvent;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
+import it.ennova.zerxconf.common.Transformers;
 import it.ennova.zerxconf.discovery.CompatOnSubscribeEvent;
+import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeFactory;
 import it.ennova.zerxconf.discovery.JBDiscoveryOnSubscribeEvent;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * This class is the one entry point for the library.
@@ -30,10 +34,8 @@ public class ZeRXconf {
     }
 
     /**
-     * This method is the one used in order to advertise the service on the network. In case you
-     * choose not to use the default Android API and go with the JmDNS implementation, remember to
-     * subscribe this {@link Observable} on a new thread, as the library implementation itself is
-     * single threaded.
+     * This method is the one used in order to advertise the service on the network. As per default,
+     * this call will be executed on a proper Scheduler and return its result onto the main thread.
      *
      * @param context      needed in order to retrieve the service for native API
      * @param serviceName  the name of the service that will be advertised on the network
@@ -55,9 +57,10 @@ public class ZeRXconf {
         OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = AdvertiseOnSubscribeFactory.from(context, serviceName, serviceLayer,
                 servicePort, attributes, forceNative);
 
-        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
+        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted()).compose(Transformers.networking());
     }
 
+    
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context) {
         return startDiscovery(context, ALL_AVAILABLE_SERVICES);
     }
@@ -65,15 +68,9 @@ public class ZeRXconf {
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
                                                                          @NonNull String protocol) {
 
-        OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = new JBDiscoveryOnSubscribeEvent(context, protocol);
-        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
+        OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = DiscoveryOnSubscribeFactory.from(context, protocol);
+        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted()).compose(Transformers.networking());
     }
 
-    public static Observable<NetworkServiceDiscoveryInfo> startDiscoveryCompat(@NonNull Context context,
-                                                                               @NonNull String protocol) {
-
-        OnSubscribeEvent<NetworkServiceDiscoveryInfo> onSubscribe = new CompatOnSubscribeEvent(context, protocol);
-        return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted());
-    }
 
 }
