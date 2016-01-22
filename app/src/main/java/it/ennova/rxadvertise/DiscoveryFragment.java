@@ -55,7 +55,6 @@ public class DiscoveryFragment extends Fragment {
     private Action1<NetworkServiceDiscoveryInfo> onNext = new Action1<NetworkServiceDiscoveryInfo>() {
         @Override
         public void call(NetworkServiceDiscoveryInfo serviceInfo) {
-            viewFlipper.showNext();
             Log.d("ZERXCONF-Discovery", serviceInfo.toString());
         }
     };
