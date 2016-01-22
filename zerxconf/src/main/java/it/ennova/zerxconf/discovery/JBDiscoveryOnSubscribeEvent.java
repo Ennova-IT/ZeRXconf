@@ -7,17 +7,19 @@ import android.support.annotation.NonNull;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.exceptions.NsdException;
+import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 import static it.ennova.zerxconf.exceptions.NsdException.*;
+import static it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo.*;
 
-public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceInfo> {
+public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDiscoveryInfo> {
 
     private NsdManager nsdManager;
     private final String protocol;
-    private Subscriber<? super NsdServiceInfo> subscriber;
+    private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
 
 
     public JBDiscoveryOnSubscribeEvent(@NonNull final Context context,
@@ -58,17 +60,17 @@ public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceI
 
         @Override
         public void onServiceFound(NsdServiceInfo serviceInfo) {
-            subscriber.onNext(serviceInfo);
+            subscriber.onNext(from(serviceInfo, ADDED));
         }
 
         @Override
         public void onServiceLost(NsdServiceInfo serviceInfo) {
-            subscriber.onNext(serviceInfo);
+            subscriber.onNext(from(serviceInfo, REMOVED));
         }
     };
 
     @Override
-    public void call(Subscriber<? super NsdServiceInfo> subscriber) {
+    public void call(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         this.subscriber = subscriber;
         nsdManager.discoverServices(protocol, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
         subscriber.add(Subscriptions.create(dismissAction));

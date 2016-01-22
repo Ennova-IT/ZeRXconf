@@ -3,8 +3,10 @@ package it.ennova.zerxconf.model;
 
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,16 +27,26 @@ public class NetworkServiceDiscoveryInfo {
     private final int servicePort;
     @NonNull
     private final Map<String, byte[]> attributes;
+    @STATUS
+    private final int status;
+
+
+    public static final int ADDED = 0;
+    public static final int REMOVED = 1;
+    @IntDef({ADDED, REMOVED})
+    public @interface STATUS{}
 
     private NetworkServiceDiscoveryInfo(@NonNull String serviceName,
                                         @NonNull String serviceLayer,
                                         int servicePort,
-                                        @NonNull Map<String, byte[]> attributes) {
+                                        @NonNull Map<String, byte[]> attributes,
+                                        @STATUS int status) {
 
         this.serviceName = serviceName;
         this.serviceLayer = serviceLayer;
         this.servicePort = servicePort;
         this.attributes = attributes;
+        this.status = status;
     }
 
     @NonNull
@@ -56,10 +68,19 @@ public class NetworkServiceDiscoveryInfo {
         return attributes;
     }
 
+    public boolean isAdded() {
+        return status == ADDED;
+    }
+
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfo source) {
+        return from (source, ADDED);
+    }
+
+    @NonNull
+    public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfo source, @STATUS int status) {
         return new NetworkServiceDiscoveryInfo(source.getServiceName(), source.getServiceType(),
-                source.getPort(), getMapFrom(source));
+                source.getPort(), getMapFrom(source), status);
     }
 
     private static Map<String, byte[]> getMapFrom(@NonNull NsdServiceInfo source) {
@@ -70,7 +91,28 @@ public class NetworkServiceDiscoveryInfo {
     }
 
     @NonNull
-    public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source, @NonNull Map attributes) {
-        return new NetworkServiceDiscoveryInfo(source.getName(), source.getType(), source.getPort(), attributes);
+    public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source,  @STATUS int status) {
+
+        Enumeration<String> propertyNames = source.getPropertyNames();
+        Map<String, byte[]> attributes = new HashMap<>();
+
+        while (propertyNames.hasMoreElements()) {
+            String key = propertyNames.nextElement();
+            attributes.put(key, source.getPropertyBytes(key));
+        }
+
+        return from (source, attributes, status);
     }
+
+    @NonNull
+    public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source, @NonNull Map attributes) {
+        return from (source, attributes, ADDED);
+    }
+
+    @NonNull
+    public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source, @NonNull Map attributes, @STATUS int status) {
+        return new NetworkServiceDiscoveryInfo(source.getName(), source.getType(), source.getPort(), attributes, status);
+    }
+
+
 }

@@ -13,14 +13,17 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
+import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-public class CompatOnSubscribeEvent implements OnSubscribeEvent<ServiceEvent> {
+import static it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo.*;
+
+public class CompatOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDiscoveryInfo> {
 
     private JmDNS jmDNS;
-    private Subscriber<? super ServiceEvent> subscriber;
+    private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
     private final String protocol;
     private Context context;
     private final String SUFFIX = ".local.";
@@ -46,14 +49,14 @@ public class CompatOnSubscribeEvent implements OnSubscribeEvent<ServiceEvent> {
         @Override
         public void serviceRemoved(ServiceEvent serviceEvent) {
             if (!subscriber.isUnsubscribed()) {
-                subscriber.onNext(serviceEvent);
+                subscriber.onNext(from(serviceEvent.getInfo(), REMOVED));
             }
         }
 
         @Override
         public void serviceResolved(ServiceEvent serviceEvent) {
             if (!subscriber.isUnsubscribed()) {
-                subscriber.onNext(serviceEvent);
+                subscriber.onNext(from(serviceEvent.getInfo(), ADDED));
             }
         }
     };
@@ -77,7 +80,7 @@ public class CompatOnSubscribeEvent implements OnSubscribeEvent<ServiceEvent> {
     }
 
     @Override
-    public void call(Subscriber<? super ServiceEvent> subscriber) {
+    public void call(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         this.subscriber = subscriber;
 
         final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

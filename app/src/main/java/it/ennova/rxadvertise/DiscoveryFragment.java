@@ -1,9 +1,7 @@
 package it.ennova.rxadvertise;
 
 
-import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,27 +12,21 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import java.io.IOException;
-import java.net.InetAddress;
-
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import it.ennova.zerxconf.ZeRXconf;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class DiscoveryFragment extends Fragment {
 
     @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
     private Subscription subscription;
+    private final String TAG = "ZeRXconf";
 
     private JmDNS jmDNS;
 
@@ -62,14 +54,14 @@ public class DiscoveryFragment extends Fragment {
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(onNext, onError);
 
-        subscription = ZeRXconf.startDiscoveryCompat(getActivity(), "_teamviewer._tcp")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext2, onError);
+//        subscription = ZeRXconf.startDiscoveryCompat(getActivity(), "_teamviewer._tcp")
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(onNext2, onError);
+
 
         viewFlipper.showNext();
     }
-
 
     private Action1<NsdServiceInfo> onNext = new Action1<NsdServiceInfo>() {
         @Override
@@ -96,7 +88,7 @@ public class DiscoveryFragment extends Fragment {
 
     @OnClick(R.id.btnStopService)
     void onStopServiceClicked() {
-        subscription.unsubscribe();
+//        subscription.unsubscribe();
         viewFlipper.showPrevious();
     }
 
