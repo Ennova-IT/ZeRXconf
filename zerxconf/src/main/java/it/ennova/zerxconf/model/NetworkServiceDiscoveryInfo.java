@@ -88,6 +88,23 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
         return toStringMessage;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof NetworkServiceDiscoveryInfo)) {
+            return false;
+        }
+
+        final NetworkServiceDiscoveryInfo current = (NetworkServiceDiscoveryInfo) o;
+        return serviceName.equals(current.getServiceName())
+                && serviceLayer.equals(current.getServiceLayer())
+                && servicePort == current.getServicePort();
+    }
+
+    @Override
+    public int hashCode() {
+        return serviceName.hashCode() + serviceLayer.hashCode() + servicePort;
+    }
+
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfo source) {
         return from (source, ADDED);
