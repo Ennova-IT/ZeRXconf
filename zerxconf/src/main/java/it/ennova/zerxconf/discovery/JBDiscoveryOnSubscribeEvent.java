@@ -79,7 +79,7 @@ public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceI
     public void call(Subscriber<? super NsdServiceInfoWrapper> subscriber) {
         this.subscriber = subscriber;
         if (!NsdUtils.isValidProtocol(protocol)) {
-            subscriber.onError(new NsdException(INVALID_PROTOCOL, protocol, 0));
+            subscriber.onError(new NsdException());
         } else {
             nsdManager.discoverServices(protocol, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
             subscriber.add(Subscriptions.create(dismissAction));

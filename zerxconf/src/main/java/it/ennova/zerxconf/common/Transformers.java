@@ -6,7 +6,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- *
+ * This class is the one that is used in order to provide {@link rx.Observable.Transformer}s to
+ * the library
  */
 public class Transformers {
 
@@ -19,7 +20,12 @@ public class Transformers {
                 }
             };
 
-
+    /**
+     * This method is the one that, used with the {@link Observable#compose(Observable.Transformer)}
+     * operator, will allow the target {@link Observable} to be executed on a proper Scheduler
+     * and return its result onto the main thread.
+     * @return the {@link rx.Observable.Transformer} needed for threading purposes
+     */
     public static Observable.Transformer<NetworkServiceDiscoveryInfo, NetworkServiceDiscoveryInfo> networking() {
         return schedulerTransformer;
     }

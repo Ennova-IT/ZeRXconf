@@ -53,11 +53,40 @@ public class ZeRXconf {
         return Observable.create(onSubscribe).doOnCompleted(onSubscribe.onCompleted()).compose(Transformers.networking());
     }
 
-
+    /**
+     * This method is the one that shall be used in order to discover all the services available in
+     * the current network. By default, this call will be executed on a proper Scheduler and return
+     * the results onto the main thread.<br/>
+     *
+     * <b>Note</b>: as per API limitation, listing all the services available in the current network
+     * will not allow the components to resolve them. That means that you will have to call the
+     * {@link #startDiscovery(Context, String)} on the specific protocol for having the data resolved
+     * correctly. If, when doing so you receive an exception from the {@link android.net.nsd.NsdManager.DiscoveryListener},
+     * make sure you closed the previous {@link rx.Subscription} before starting a new one.<br/>
+     *
+     * <b>Note</b>: this method is making use of the {@link #ALL_AVAILABLE_SERVICES} constant to discover
+     * all the services in the available network
+     * @param context needed in order to retrieve the service for native API
+     * @return an {@link Observable} that will emit all the different services found on the current
+     * network
+     */
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context) {
         return DiscoveryOnSubscribeFactory.from(context);
     }
 
+    /**
+     * This method is the one that shall be used in order to discover all the services available in
+     * the current network. By default, this call will be executed on a proper Scheduler and return
+     * the results onto the main thread.<br/>
+     *
+     * <b>Note</b>: this call will emit an error if the given protocol is not valid or it is the
+     * {@link #ALL_AVAILABLE_SERVICES} or the "_services._dns-sd._udp" value
+     *
+     * @param context needed in order to retrieve the service for native API
+     * @param protocol the requested protocol
+     * @return an {@link Observable} that will emit all the instances of the service matching the
+     * given protocol found on the current network
+     */
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
                                                                          @NonNull String protocol) {
 

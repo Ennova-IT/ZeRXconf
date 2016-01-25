@@ -6,7 +6,9 @@ import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
+import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
+import it.ennova.zerxconf.utils.NsdUtils;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -36,9 +38,13 @@ public class JBAdvertiseOnSubscribeEvent implements
     @Override
     public void call(final Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         this.subscriber = subscriber;
-        nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
-        nsdManager.registerService(nsdServiceInfo, NsdManager.PROTOCOL_DNS_SD, this);
-        subscriber.add(Subscriptions.create(dismissAction));
+        if (!NsdUtils.isValidProtocol(nsdServiceInfo.getServiceType())) {
+            subscriber.onError(new NsdException());
+        } else {
+            nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
+            nsdManager.registerService(nsdServiceInfo, NsdManager.PROTOCOL_DNS_SD, this);
+            subscriber.add(Subscriptions.create(dismissAction));
+        }
     }
 
     private final Action0 dismissAction = new Action0() {

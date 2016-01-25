@@ -13,7 +13,9 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
+import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
+import it.ennova.zerxconf.utils.NsdUtils;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -83,6 +85,14 @@ public class CompatOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDi
     public void call(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         this.subscriber = subscriber;
 
+        if (!NsdUtils.isValidProtocol(protocol)) {
+            subscriber.onError(new NsdException());
+        } else {
+            startSubscription(subscriber);
+        }
+    }
+
+    private void startSubscription(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         try {
             final InetAddress inetAddress = buildAddress(wifiManager);

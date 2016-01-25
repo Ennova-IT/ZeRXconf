@@ -9,7 +9,9 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
 import it.ennova.zerxconf.common.OnSubscribeEvent;
+import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
+import it.ennova.zerxconf.utils.NsdUtils;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -50,7 +52,14 @@ public class CompatAdvertiseOnSubscribeEvent implements OnSubscribeEvent<Network
         if (subscriber.isUnsubscribed()) {
             return;
         }
+        if (!NsdUtils.isValidProtocol(serviceInfo.getProtocol())) {
+            subscriber.onError(new NsdException());
+        } else {
+            startSubscription(subscriber);
+        }
+    }
 
+    private void startSubscription(Subscriber<? super NetworkServiceDiscoveryInfo> subscriber) {
         try {
             jmDNS = JmDNS.create();
             jmDNS.registerService(serviceInfo);
