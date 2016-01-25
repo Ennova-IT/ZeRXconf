@@ -17,7 +17,7 @@ public class ServiceViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindTo(@NonNull NetworkServiceDiscoveryInfo info) {
-        serviceName.setText(info.getServiceName());
-        serviceAddress.setText(String.format("%s:%s", info.getServiceLayer(), info.getServicePort()));
+        serviceName.setText(String.format("%s (%s)", info.getServiceName(), info.getServiceLayer()));
+        serviceAddress.setText(String.format("%s:%s", info.getAddress().getHostAddress(), info.getServicePort()));
     }
 }

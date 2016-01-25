@@ -9,14 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -44,7 +41,6 @@ public class DiscoveryFragment extends Fragment {
 
     private Subscription subscription;
     private ServicesAdapter adapter = new ServicesAdapter();
-    private final String TAG = "ZeRXconf";
 
     public DiscoveryFragment() {
     }
@@ -63,7 +59,7 @@ public class DiscoveryFragment extends Fragment {
         ViewFlipperUtils.initAnimationOn(viewFlipper, getActivity());
 
         txtServiceLayer.addTextChangedListener(serviceContentWatcher);
-        txtServiceLayer.setText("_workstation._tcp.");
+        txtServiceLayer.setText(BuildConfig.DEFAULT_SERVICE_TYPE);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         servicesList.setLayoutManager(layoutManager);

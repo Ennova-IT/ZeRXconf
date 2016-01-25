@@ -3,14 +3,23 @@ package it.ennova.zerxconf.model;
 
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.net.InetAddress;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.jmdns.ServiceInfo;
+
+import it.ennova.zerxconf.utils.InetUtils;
+import it.ennova.zerxconf.utils.MapUtils;
+
+import static it.ennova.zerxconf.utils.InetUtils.isValid;
 
 /**
  * This class is the one that represents the model for the service that is used inside this library.
@@ -18,7 +27,7 @@ import javax.jmdns.ServiceInfo;
  * @see #from(NsdServiceInfo) Creating a new instance from the native Android API
  * @see #from(ServiceInfo, Map) Creating a new instance from the JmDNS API
  */
-public class NetworkServiceDiscoveryInfo implements NsdStatus {
+public class NetworkServiceDiscoveryInfo implements NsdStatus, Parcelable {
 
     @NonNull
     private final String serviceName;
@@ -29,6 +38,7 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
     private final Map<String, byte[]> attributes;
     @STATUS
     private final int status;
+    private final InetAddress address;
 
     final String toStringMessage;
 
@@ -36,21 +46,24 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
                                         @NonNull String serviceLayer,
                                         int servicePort,
                                         @NonNull Map<String, byte[]> attributes,
-                                        @STATUS int status) {
+                                        @STATUS int status, @Nullable InetAddress address) {
 
         this.serviceName = serviceName;
         this.serviceLayer = serviceLayer;
         this.servicePort = servicePort;
         this.attributes = attributes;
         this.status = status;
+        this.address = address;
 
         toStringMessage = buildToStringMessage();
     }
 
     private String buildToStringMessage() {
         StringBuffer buffer = new StringBuffer(serviceName)
-                .append(".")
+                .append("(")
                 .append(serviceLayer)
+                .append(") - ")
+                .append(address.getHostAddress())
                 .append(":")
                 .append(servicePort)
                 .append(" - Status: ")
@@ -78,6 +91,11 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
         return attributes;
     }
 
+    @Nullable
+    public InetAddress getAddress() {
+        return address;
+    }
+
     @Override
     public boolean isAdded() {
         return status == ADDED;
@@ -97,12 +115,13 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
         final NetworkServiceDiscoveryInfo current = (NetworkServiceDiscoveryInfo) o;
         return serviceName.equals(current.getServiceName())
                 && serviceLayer.equals(current.getServiceLayer())
-                && servicePort == current.getServicePort();
+                && servicePort == current.getServicePort()
+                && InetUtils.isSame(address, current.getAddress());
     }
 
     @Override
     public int hashCode() {
-        return serviceName.hashCode() + serviceLayer.hashCode() + servicePort;
+        return serviceName.hashCode() + serviceLayer.hashCode() + servicePort + address.hashCode();
     }
 
     @NonNull
@@ -118,28 +137,12 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull NsdServiceInfo source, @STATUS int status) {
         return new NetworkServiceDiscoveryInfo(source.getServiceName(), source.getServiceType(),
-                source.getPort(), getMapFrom(source), status);
-    }
-
-    private static Map<String, byte[]> getMapFrom(@NonNull NsdServiceInfo source) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return source.getAttributes();
-        }
-        return new HashMap<>(0);
+                source.getPort(), MapUtils.getMapFrom(source), status, source.getHost());
     }
 
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source,  @STATUS int status) {
-
-        Enumeration<String> propertyNames = source.getPropertyNames();
-        Map<String, byte[]> attributes = new HashMap<>();
-
-        while (propertyNames.hasMoreElements()) {
-            String key = propertyNames.nextElement();
-            attributes.put(key, source.getPropertyBytes(key));
-        }
-
-        return from (source, attributes, status);
+        return from (source, MapUtils.getMapFrom(source), status);
     }
 
     @NonNull
@@ -149,8 +152,49 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus {
 
     @NonNull
     public static NetworkServiceDiscoveryInfo from (@NonNull ServiceInfo source, @NonNull Map attributes, @STATUS int status) {
-        return new NetworkServiceDiscoveryInfo(source.getName(), source.getType(), source.getPort(), attributes, status);
+        return new NetworkServiceDiscoveryInfo(source.getName(), source.getType(), source.getPort(), attributes, status, InetUtils.getHostAddressFrom(source));
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(serviceName);
+        dest.writeString(serviceLayer);
+        dest.writeInt(servicePort);
+        dest.writeMap(attributes);
+        dest.writeInt(status);
+        dest.writeSerializable(address);
+    }
+
+    public static final Parcelable.Creator<NetworkServiceDiscoveryInfo> CREATOR
+            = new Parcelable.Creator<NetworkServiceDiscoveryInfo>() {
+
+        public NetworkServiceDiscoveryInfo createFromParcel(Parcel in) {
+            return new NetworkServiceDiscoveryInfo(in);
+        }
+
+        public NetworkServiceDiscoveryInfo[] newArray(int size) {
+            return new NetworkServiceDiscoveryInfo[size];
+        }
+    };
+
+    private NetworkServiceDiscoveryInfo(Parcel in) {
+        serviceName = in.readString();
+        serviceLayer = in.readString();
+        servicePort = in.readInt();
+        attributes = in.readHashMap(HashMap.class.getClassLoader());
+        status = getStatusFrom(in.readInt());
+        address = (InetAddress) in.readSerializable();
+
+        toStringMessage = buildToStringMessage();
+    }
+
+    @STATUS
+    private int getStatusFrom(int data) {
+        return (data == ADDED) ? ADDED : REMOVED;
+    }
 }
