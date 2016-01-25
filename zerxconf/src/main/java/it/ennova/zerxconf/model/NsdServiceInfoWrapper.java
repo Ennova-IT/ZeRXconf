@@ -1,9 +1,14 @@
 package it.ennova.zerxconf.model;
 
 import android.net.nsd.NsdServiceInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
-public class NsdServiceInfoWrapper implements NsdStatus{
+import java.util.Set;
+
+import it.ennova.zerxconf.utils.NsdUtils;
+
+public class NsdServiceInfoWrapper implements NsdStatus {
 
     private final NsdServiceInfo nsdServiceInfo;
     @STATUS
@@ -27,5 +32,10 @@ public class NsdServiceInfoWrapper implements NsdStatus{
     @STATUS
     public int getStatus() {
         return status;
+    }
+
+    public static NsdServiceInfoWrapper from(@NonNull NetworkServiceDiscoveryInfo source) {
+
+        return new NsdServiceInfoWrapper(NsdUtils.from(source), NsdStatus.ADDED);
     }
 }

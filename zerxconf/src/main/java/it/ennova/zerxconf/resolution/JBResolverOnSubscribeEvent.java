@@ -1,11 +1,10 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.resolution;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 
-import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NsdServiceInfoWrapper;
 import rx.Observable;
 import rx.Subscriber;

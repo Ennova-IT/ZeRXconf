@@ -1,25 +1,20 @@
 package it.ennova.zerxconf;
 
 import android.content.Context;
-import android.net.nsd.NsdServiceInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-import javax.jmdns.ServiceEvent;
-
+import it.ennova.zerxconf.common.Functions;
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
 import it.ennova.zerxconf.common.Transformers;
-import it.ennova.zerxconf.discovery.CompatOnSubscribeEvent;
 import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeFactory;
-import it.ennova.zerxconf.discovery.JBDiscoveryOnSubscribeEvent;
+import it.ennova.zerxconf.resolution.JBDiscoveryServiceResolver;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
+import it.ennova.zerxconf.resolution.ResolutionObservableFactory;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * This class is the one entry point for the library.
@@ -70,6 +65,12 @@ public class ZeRXconf {
                                                                          @NonNull String protocol) {
 
         return DiscoveryOnSubscribeFactory.from(context, protocol);
+    }
+
+    public static Observable<NetworkServiceDiscoveryInfo> resolveService(@NonNull Context context,
+                                                                         @NonNull NetworkServiceDiscoveryInfo source) {
+
+        return ResolutionObservableFactory.from(context, source);
     }
 
 

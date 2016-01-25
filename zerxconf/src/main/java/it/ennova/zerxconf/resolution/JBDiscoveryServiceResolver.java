@@ -1,4 +1,4 @@
-package it.ennova.zerxconf.discovery;
+package it.ennova.zerxconf.resolution;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

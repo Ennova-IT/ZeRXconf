@@ -11,6 +11,7 @@ import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.common.Transformers;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import it.ennova.zerxconf.model.NsdServiceInfoWrapper;
+import it.ennova.zerxconf.resolution.JBDiscoveryServiceResolver;
 import rx.Observable;
 
 public class DiscoveryOnSubscribeFactory {
