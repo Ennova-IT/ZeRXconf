@@ -30,7 +30,7 @@ public class AdvertisementFragment extends Fragment {
 
     private Map<String, String> attributes = new HashMap<>(1);
     private final Map<String, String> emptyAttributes = new HashMap<>(0);
-    private boolean forceNative = false;
+    private boolean forceNative = true;
     private boolean forceEmptySet = false;
     private Subscription subscription;
 

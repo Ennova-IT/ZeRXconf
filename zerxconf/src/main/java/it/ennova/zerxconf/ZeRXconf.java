@@ -63,7 +63,7 @@ public class ZeRXconf {
 
 
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context) {
-        return startDiscovery(context, ALL_AVAILABLE_SERVICES);
+        return DiscoveryOnSubscribeFactory.from(context);
     }
 
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
