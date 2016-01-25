@@ -25,7 +25,7 @@ import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class DiscoveryFragment extends Fragment {
+public class DiscoveryFragment extends Fragment implements OnServiceSelectedListener {
 
     @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
@@ -40,7 +40,7 @@ public class DiscoveryFragment extends Fragment {
     ImageButton imageClearContent;
 
     private Subscription subscription;
-    private ServicesAdapter adapter = new ServicesAdapter();
+    private ServicesAdapter adapter;
 
     public DiscoveryFragment() {
     }
@@ -58,6 +58,8 @@ public class DiscoveryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ViewFlipperUtils.initAnimationOn(viewFlipper, getActivity());
 
+        adapter = new ServicesAdapter(this);
+
         txtServiceLayer.addTextChangedListener(serviceContentWatcher);
         txtServiceLayer.setText(BuildConfig.DEFAULT_SERVICE_TYPE);
 
@@ -68,7 +70,8 @@ public class DiscoveryFragment extends Fragment {
 
     private final TextWatcher serviceContentWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -80,7 +83,8 @@ public class DiscoveryFragment extends Fragment {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {}
+        public void afterTextChanged(Editable s) {
+        }
     };
 
     @OnClick(R.id.btnStartService)
@@ -125,4 +129,15 @@ public class DiscoveryFragment extends Fragment {
         imageClearContent.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onServiceSelected(NetworkServiceDiscoveryInfo info) {
+        onStopServiceClicked();
+        getActivity().startActivity(DetailActivity.getDetailActivityIntent(getActivity(), info, info.getAddress() != null));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        subscription.unsubscribe();
+    }
 }

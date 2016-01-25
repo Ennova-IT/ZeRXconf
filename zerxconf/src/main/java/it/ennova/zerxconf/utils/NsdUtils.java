@@ -27,4 +27,8 @@ public class NsdUtils {
 
         return info;
     }
+
+    public static String cleanProtocolOf(@NonNull NetworkServiceDiscoveryInfo info) {
+        return (info.getServiceName() + "." + info.getServiceLayer()).replaceAll("\\.", "").replace("local.", "");
+    }
 }

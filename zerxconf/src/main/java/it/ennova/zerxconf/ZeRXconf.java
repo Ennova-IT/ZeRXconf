@@ -6,14 +6,11 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-import it.ennova.zerxconf.common.Functions;
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
 import it.ennova.zerxconf.common.Transformers;
 import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeFactory;
-import it.ennova.zerxconf.resolution.JBDiscoveryServiceResolver;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
-import it.ennova.zerxconf.resolution.ResolutionObservableFactory;
 import rx.Observable;
 
 /**
@@ -66,12 +63,5 @@ public class ZeRXconf {
 
         return DiscoveryOnSubscribeFactory.from(context, protocol);
     }
-
-    public static Observable<NetworkServiceDiscoveryInfo> resolveService(@NonNull Context context,
-                                                                         @NonNull NetworkServiceDiscoveryInfo source) {
-
-        return ResolutionObservableFactory.from(context, source);
-    }
-
 
 }

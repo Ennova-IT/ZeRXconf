@@ -2,15 +2,12 @@ package it.ennova.zerxconf.model;
 
 
 import android.net.nsd.NsdServiceInfo;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.net.InetAddress;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,8 +15,6 @@ import javax.jmdns.ServiceInfo;
 
 import it.ennova.zerxconf.utils.InetUtils;
 import it.ennova.zerxconf.utils.MapUtils;
-
-import static it.ennova.zerxconf.utils.InetUtils.isValid;
 
 /**
  * This class is the one that represents the model for the service that is used inside this library.
@@ -59,17 +54,13 @@ public class NetworkServiceDiscoveryInfo implements NsdStatus, Parcelable {
     }
 
     private String buildToStringMessage() {
-        StringBuffer buffer = new StringBuffer(serviceName)
-                .append("(")
-                .append(serviceLayer)
-                .append(") - ")
-                .append(address.getHostAddress())
-                .append(":")
-                .append(servicePort)
-                .append(" - Status: ")
-                .append((isAdded()) ? "ADDED" : "REMOVED");
+        final String ip = (address != null) ? address.getHostAddress() : "N/A";
 
-        return buffer.toString();
+        return serviceName +
+                "(" + serviceLayer + ") - " +
+                ip + ":" + servicePort +
+                " - Status: " +
+                ((isAdded()) ? "ADDED" : "REMOVED");
     }
 
     @NonNull

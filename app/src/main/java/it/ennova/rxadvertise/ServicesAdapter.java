@@ -12,11 +12,16 @@ import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 
 public class ServicesAdapter extends RecyclerView.Adapter<ServiceViewHolder> {
     private List<NetworkServiceDiscoveryInfo> services = new ArrayList<>();
+    private OnServiceSelectedListener serviceSelectedListener;
+
+    public ServicesAdapter(OnServiceSelectedListener serviceSelectedListener) {
+        this.serviceSelectedListener = serviceSelectedListener;
+    }
 
     @Override
     public ServiceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ServiceViewHolder(inflater.inflate(R.layout.service_item_layout, parent, false));
+        return new ServiceViewHolder(inflater.inflate(R.layout.service_item_layout, parent, false), serviceSelectedListener);
     }
 
     @Override
