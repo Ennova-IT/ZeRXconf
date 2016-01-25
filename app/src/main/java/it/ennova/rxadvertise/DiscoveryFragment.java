@@ -45,9 +45,8 @@ public class DiscoveryFragment extends Fragment {
 
     @OnClick(R.id.btnStartService)
     void onStartServiceClicked() {
-        subscription = ZeRXconf.startDiscovery(getActivity())
+        subscription = ZeRXconf.startDiscovery(getActivity(), "_ssh._tcp.")
                 .subscribe(onNext, onError);
-
 
         viewFlipper.showNext();
     }

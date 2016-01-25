@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
  */
 public class Transformers {
 
-    private static Observable.Transformer<NetworkServiceDiscoveryInfo, NetworkServiceDiscoveryInfo> schedulerTransformer =
+    private static final Observable.Transformer<NetworkServiceDiscoveryInfo, NetworkServiceDiscoveryInfo> schedulerTransformer =
             new Observable.Transformer<NetworkServiceDiscoveryInfo, NetworkServiceDiscoveryInfo>() {
                 @Override
                 public Observable<NetworkServiceDiscoveryInfo> call(Observable<NetworkServiceDiscoveryInfo> observable) {
