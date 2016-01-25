@@ -4,12 +4,15 @@ package it.ennova.zerxconf.utils;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.Set;
 
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 
 public class NsdUtils {
+
+    public static final String NSD_URL_PATTERN = "^\\_[\\w]+\\.\\_((udp)|(tcp))\\.$";
 
     public static NsdServiceInfo from(@NonNull NetworkServiceDiscoveryInfo source) {
         NsdServiceInfo info = new NsdServiceInfo();
@@ -29,6 +32,10 @@ public class NsdUtils {
     }
 
     public static String cleanProtocolOf(@NonNull NetworkServiceDiscoveryInfo info) {
-        return (info.getServiceName() + "." + info.getServiceLayer()).replaceAll("\\.", "").replace("local.", "");
+        return (info.getServiceName() + "." + info.getServiceLayer()).replaceAll("(\\.){2}", "").replace("local.", "");
+    }
+
+    public static boolean isValidProtocol(@NonNull String protocol) {
+        return !TextUtils.isEmpty(protocol) && protocol.matches(NSD_URL_PATTERN);
     }
 }

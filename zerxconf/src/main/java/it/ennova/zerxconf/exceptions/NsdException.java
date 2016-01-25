@@ -17,8 +17,9 @@ public class NsdException extends IllegalStateException{
     public static final String START_DISCOVERY = "starting discovery";
     public static final String STOP_DISCOVERY = "stopping discovery";
     public static final String SERVICE_RESOLUTION = "service resolution";
+    public static final String INVALID_PROTOCOL = "validating protocol";
 
-    @StringDef({START_DISCOVERY, STOP_DISCOVERY, SERVICE_RESOLUTION})
+    @StringDef({START_DISCOVERY, STOP_DISCOVERY, SERVICE_RESOLUTION, INVALID_PROTOCOL})
     public @interface FAILURE {}
 
     public NsdException(@FAILURE String failure,

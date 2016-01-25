@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NsdServiceInfoWrapper;
+import it.ennova.zerxconf.utils.NsdUtils;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
@@ -77,8 +78,12 @@ public class JBDiscoveryOnSubscribeEvent implements OnSubscribeEvent<NsdServiceI
     @Override
     public void call(Subscriber<? super NsdServiceInfoWrapper> subscriber) {
         this.subscriber = subscriber;
-        nsdManager.discoverServices(protocol, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-        subscriber.add(Subscriptions.create(dismissAction));
+        if (!NsdUtils.isValidProtocol(protocol)) {
+            subscriber.onError(new NsdException(INVALID_PROTOCOL, protocol, 0));
+        } else {
+            nsdManager.discoverServices(protocol, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+            subscriber.add(Subscriptions.create(dismissAction));
+        }
     }
 
     @Override
