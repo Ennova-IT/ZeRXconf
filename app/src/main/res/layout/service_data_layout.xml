@@ -59,19 +59,10 @@
     </LinearLayout>
 
     <Switch
-        android:id="@+id/switchNativeApi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/serviceDetailsLayout"
-        android:checked="true"
-        android:padding="16dp"
-        android:text="Force native Android API" />
-
-    <Switch
         android:id="@+id/switchEmptyAttributeSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/switchNativeApi"
+        android:layout_below="@id/serviceDetailsLayout"
         android:padding="16dp"
         android:text="Empty attribute set" />
 

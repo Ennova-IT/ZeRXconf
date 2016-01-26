@@ -18,10 +18,9 @@ public class AdvertiseOnSubscribeFactory {
                                                                      @NonNull String serviceName,
                                                                      @NonNull String serviceLayer,
                                                                      int servicePort,
-                                                                     @Nullable Map<String, String> attributes,
-                                                                     boolean forceNative) {
+                                                                     @Nullable Map<String, String> attributes) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && forceNative) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return buildNativeOnSubscribeEventFrom(context, serviceName, serviceLayer, servicePort, attributes);
         } else {
             return new CompatAdvertiseOnSubscribeEvent(serviceName, serviceLayer, servicePort, attributes);

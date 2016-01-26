@@ -30,7 +30,6 @@ public class AdvertisementFragment extends Fragment {
 
     private Map<String, String> attributes = new HashMap<>(1);
     private final Map<String, String> emptyAttributes = new HashMap<>(0);
-    private boolean forceNative = true;
     private boolean forceEmptySet = false;
     private Subscription subscription;
 
@@ -74,21 +73,6 @@ public class AdvertisementFragment extends Fragment {
         txtServicePort.setText(BuildConfig.DEFAULT_SERVICE_PORT);
     }
 
-    @OnCheckedChanged(R.id.switchNativeApi)
-    void onNativeApiCheckedChanged(boolean isChecked) {
-        forceNative = isChecked;
-        fixEmptyAttributeEnabledState(isChecked);
-    }
-
-    private void fixEmptyAttributeEnabledState(boolean isChecked) {
-        if (!isChecked) {
-            switchEmptyAttributes.setChecked(true);
-            switchEmptyAttributes.setEnabled(false);
-        } else {
-            switchEmptyAttributes.setEnabled(true);
-        }
-    }
-
     @OnCheckedChanged(R.id.switchEmptyAttributeSet)
     void onEmptyAttributesCheckedChanged(boolean isChecked) {
         forceEmptySet = isChecked;
@@ -98,7 +82,7 @@ public class AdvertisementFragment extends Fragment {
     void onAdvertisementButtonClicked() {
 
         subscription = ZeRXconf.advertise(getActivity(), txtServiceName.getText().toString(), txtServiceType.getText().toString(),
-                Integer.valueOf(txtServicePort.getText().toString()), getAttributes(), forceNative).subscribe(onNext, onError);
+                Integer.valueOf(txtServicePort.getText().toString()), getAttributes()).subscribe(onNext, onError);
 
     }
 
