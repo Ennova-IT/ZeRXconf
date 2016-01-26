@@ -138,6 +138,8 @@ public class DiscoveryFragment extends Fragment implements OnServiceSelectedList
     @Override
     public void onPause() {
         super.onPause();
-        subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 }

@@ -10,6 +10,7 @@ import it.ennova.zerxconf.common.OnSubscribeEvent;
 import it.ennova.zerxconf.advertise.AdvertiseOnSubscribeFactory;
 import it.ennova.zerxconf.common.Transformers;
 import it.ennova.zerxconf.discovery.DiscoveryOnSubscribeFactory;
+import it.ennova.zerxconf.exceptions.NsdException;
 import it.ennova.zerxconf.model.NetworkServiceDiscoveryInfo;
 import rx.Observable;
 
@@ -73,19 +74,24 @@ public class ZeRXconf {
 
     /**
      * This method is the one that shall be used in order to discover all the services available in
-     * the current network. By default, this call will be executed on a proper Scheduler and return
-     * the results onto the main thread.<br/>
+     * the current network for a given protocol. By default, this call will be executed on a proper
+     * Scheduler and return the results onto the main thread.<br/>
      *
-     * <b>Note</b>: this call will emit an error if the given protocol is not valid or it is the
-     * {@link #ALL_AVAILABLE_SERVICES} or the "_services._dns-sd._udp" value
      *
      * @param context needed in order to retrieve the service for native API
      * @param protocol the requested protocol
      * @return an {@link Observable} that will emit all the instances of the service matching the
      * given protocol found on the current network
+     *
+     * @throws NsdException if {@code protocol} equals {@link #ALL_AVAILABLE_SERVICES} or the
+     * "_services._dns-sd._udp" value
      */
-    public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
-                                                                         @NonNull String protocol) {
+    public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(
+            @NonNull Context context, @NonNull String protocol) throws NsdException {
+
+        if (protocol.equalsIgnoreCase(ALL_AVAILABLE_SERVICES)) {
+            throw new NsdException(NsdException.INVALID_ARGUMENT, protocol, 0);
+        }
 
         return DiscoveryOnSubscribeFactory.from(context, protocol);
     }
