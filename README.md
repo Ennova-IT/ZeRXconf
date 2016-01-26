@@ -66,6 +66,16 @@ When you need to start advertising your service, you need to provide the factory
 
 >Since the Android implementation can be used only from **Android 4.1**, for previous versions of the system it will be automatically used the JmDNS implementation. Unfortunately, if you need to pass custom attributes to the service, Android supports it only from version **5.1 (API 21)** so, in that case, the library will revert to the JmDNS implementation in order to give the desired behaviour.
 
+*Declaration:*  
+
+```java
+public static Observable<NetworkServiceDiscoveryInfo> advertise(@NonNull Context context,
+				@NonNull String serviceName, @NonNull String serviceLayer, int servicePort,
+				@Nullable Map<String, String> attributes)
+```
+
+*Usage:*
+
 ```java
 Subscription s = ZeRXconf.advertise(context, "ZeRXconf", "_http._tcp.", 1234, getAttributes())
                 .subscribe(onNext, onError);
@@ -73,6 +83,14 @@ Subscription s = ZeRXconf.advertise(context, "ZeRXconf", "_http._tcp.", 1234, ge
 
 ## Discovering all the available services
 >As per API limitation, listing all the services available in the current network will not allow the components to resolve them. That means that you will have to call the ```startDiscovery(Context, String)``` on the specific protocol for having the data resolved correctly. If, when doing so you receive an exception from the ```DiscoveryListener```, make sure you closed the previous ```Subscription``` before starting a new one.
+
+*Declaration:*  
+
+```java
+public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context)
+```
+
+*Usage:*
 
 ```java
 Subscription s = ZeRXconf.startDiscovery(context).subscribe(onNext, onError);
@@ -83,6 +101,15 @@ If you need to discover all the devices advertising a specific protocol, you sha
 
 >As per design choice, this factory method will throw a ```NsdException``` if protocol equals either the ```"_services._dns-sd._udp"``` value or the ```ALL_AVAILABLE_SERVICES```. This a wanted behaviour that can alert you before you ship the product with an unwanted behaviour in it.  
 **This method will not throw any other type of exception but it will notifiy you of errors while discovering the services with the usual ```onError``` callback**
+
+*Declaration:*  
+
+```java
+public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(@NonNull Context context,
+				@NonNull String protocol) throws NsdException
+```
+
+*Usage:*
 
 ```java
 Subscription s = ZeRXconf.startDiscovery(context, "_http._tcp.").subscribe(onNext, onError);
@@ -103,6 +130,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [wikipedia-zeroconf]: <https://en.wikipedia.org/wiki/Zero-configuration_networking>
 [bonjour]: <http://www.apple.com/support/bonjour/>
 [rxlifecycle]: <https://github.com/trello/RxLifecycle>
-
-
-
