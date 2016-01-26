@@ -6,25 +6,25 @@
     tools:showIn="@layout/layout_advertise">
 
     <ViewFlipper
-        android:id="@+id/advertisingViewFlipper"
+        android:id="@+id/commandViewFlipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true">
+        android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnAdvertiseService"
+            android:id="@+id/btnStartService"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
             android:layout_gravity="bottom"
-            android:text="Start" />
+            android:text="@string/start_label" />
 
         <Button
             android:id="@+id/btnStopService"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
-            android:text="Stop" />
+            android:text="@string/stop_label"
+            android:layout_gravity="bottom"/>
     </ViewFlipper>
 
 </merge>

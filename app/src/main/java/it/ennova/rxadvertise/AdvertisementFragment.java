@@ -1,6 +1,5 @@
 package it.ennova.rxadvertise;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ public class AdvertisementFragment extends Fragment {
 
     private Map<String, String> attributes = new HashMap<>(1);
     private final Map<String, String> emptyAttributes = new HashMap<>(0);
-    private boolean forceNative = false;
     private boolean forceEmptySet = false;
     private Subscription subscription;
 
@@ -45,7 +43,7 @@ public class AdvertisementFragment extends Fragment {
     EditText txtServiceType;
     @Bind(R.id.txtServicePort)
     EditText txtServicePort;
-    @Bind(R.id.advertisingViewFlipper)
+    @Bind(R.id.commandViewFlipper)
     ViewFlipper viewFlipper;
 
 
@@ -65,7 +63,7 @@ public class AdvertisementFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         buildDefaultData();
-        prepareViewFlipper();
+        ViewFlipperUtils.initAnimationOn(viewFlipper, getActivity());
     }
 
     private void buildDefaultData() {
@@ -75,39 +73,16 @@ public class AdvertisementFragment extends Fragment {
         txtServicePort.setText(BuildConfig.DEFAULT_SERVICE_PORT);
     }
 
-    private void prepareViewFlipper() {
-        viewFlipper.setInAnimation(getActivity(), android.R.anim.slide_in_left);
-        viewFlipper.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
-    }
-
-    @OnCheckedChanged(R.id.switchNativeApi)
-    void onNativeApiCheckedChanged(boolean isChecked) {
-        forceNative = isChecked;
-        fixEmptyAttributeEnabledState(isChecked);
-    }
-
-    private void fixEmptyAttributeEnabledState(boolean isChecked) {
-        if (!isChecked) {
-            switchEmptyAttributes.setChecked(true);
-            switchEmptyAttributes.setEnabled(false);
-        } else {
-            switchEmptyAttributes.setEnabled(true);
-        }
-    }
-
     @OnCheckedChanged(R.id.switchEmptyAttributeSet)
     void onEmptyAttributesCheckedChanged(boolean isChecked) {
         forceEmptySet = isChecked;
     }
 
-    @OnClick(R.id.btnAdvertiseService)
+    @OnClick(R.id.btnStartService)
     void onAdvertisementButtonClicked() {
 
         subscription = ZeRXconf.advertise(getActivity(), txtServiceName.getText().toString(), txtServiceType.getText().toString(),
-                Integer.valueOf(txtServicePort.getText().toString()), getAttributes(), forceNative)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError);
+                Integer.valueOf(txtServicePort.getText().toString()), getAttributes()).subscribe(onNext, onError);
 
     }
 
