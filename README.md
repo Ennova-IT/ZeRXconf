@@ -4,6 +4,7 @@ This library has been built in order to provide a Reactive wrapper around the An
 ![Compatibility: Android 2.3+](https://img.shields.io/badge/compatibility-Android%202.3%2B-green.svg)
 ![Version: 1.0.1](https://img.shields.io/badge/version-1.0.1-green.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ZeRXConf-green.svg?style=true)](https://android-arsenal.com/details/1/3220)
 ## What is Zeroconf
 From [Wikipedia][wikipedia-zeroconf]:
 > Zero-configuration networking (**zeroconf**) is a set of technologies that automatically creates a usable computer network based on the Internet Protocol Suite (TCP/IP) when computers or network peripherals are interconnected. It does not require manual operator intervention or special configuration servers.  
@@ -16,7 +17,7 @@ As an example, you can see Zeroconf working in the Chromecast environment, where
 # Importing the library
 ## Gradle
 Add the ```JitPack``` repository to the root ```build.gradle``` file of your project
-```java
+```groovy
 allprojects {
 	repositories {
 		...
@@ -26,7 +27,7 @@ allprojects {
 ```
 
 Import the library in your app's module ```build.gradle```
-```java
+```groovy
 dependencies {
     ...
     compile 'com.github.Ennova-IT:ZeRXconf:1.0.2'
@@ -35,7 +36,7 @@ dependencies {
 
 ## Maven
 Add the ```JitPack``` repository to your build file
-```
+```xml
 <repositories>
 	<repository>
 	    <id>jitpack.io</id>
@@ -45,7 +46,7 @@ Add the ```JitPack``` repository to your build file
 ```
 
 Add the dependency
-```
+```xml
 <dependency>
     <groupId>com.github.Ennova-IT</groupId>
     <artifactId>ZeRXconf</artifactId>
