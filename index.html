@@ -26,7 +26,8 @@
 
 <p><img src="https://img.shields.io/badge/compatibility-Android%202.3%2B-green.svg" alt="Compatibility: Android 2.3+">
 <img src="https://img.shields.io/badge/version-1.0.1-green.svg" alt="Version: 1.0.1">
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></p>
+<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT">
+<a href="https://android-arsenal.com/details/1/3220"><img src="https://img.shields.io/badge/Android%20Arsenal-ZeRXConf-green.svg?style=true" alt="Android Arsenal"></a></p>
 
 <h2>
 <a id="what-is-zeroconf" class="anchor" href="#what-is-zeroconf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is Zeroconf</h2>
@@ -50,17 +51,17 @@
 
 <p>Add the <code>JitPack</code> repository to the root <code>build.gradle</code> file of your project</p>
 
-<div class="highlight highlight-source-java"><pre>allprojects {
+<div class="highlight highlight-source-groovy"><pre>allprojects {
     repositories {
-        <span class="pl-c1">...</span>
+        <span class="pl-k">..</span>.
         maven { url <span class="pl-s"><span class="pl-pds">"</span>https://jitpack.io<span class="pl-pds">"</span></span> }
     }
 }</pre></div>
 
 <p>Import the library in your app's module <code>build.gradle</code></p>
 
-<div class="highlight highlight-source-java"><pre>dependencies {
-    <span class="pl-c1">...</span>
+<div class="highlight highlight-source-groovy"><pre>dependencies {
+    <span class="pl-k">..</span>.
     compile <span class="pl-s"><span class="pl-pds">'</span>com.github.Ennova-IT:ZeRXconf:1.0.2<span class="pl-pds">'</span></span>
 }</pre></div>
 
@@ -69,22 +70,20 @@
 
 <p>Add the <code>JitPack</code> repository to your build file</p>
 
-<pre><code>&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;jitpack.io&lt;/id&gt;
-        &lt;url&gt;https://jitpack.io&lt;/url&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;
-</code></pre>
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">repositories</span>&gt;
+    &lt;<span class="pl-ent">repository</span>&gt;
+        &lt;<span class="pl-ent">id</span>&gt;jitpack.io&lt;/<span class="pl-ent">id</span>&gt;
+        &lt;<span class="pl-ent">url</span>&gt;https://jitpack.io&lt;/<span class="pl-ent">url</span>&gt;
+    &lt;/<span class="pl-ent">repository</span>&gt;
+&lt;/<span class="pl-ent">repositories</span>&gt;</pre></div>
 
 <p>Add the dependency</p>
 
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;com.github.Ennova-IT&lt;/groupId&gt;
-    &lt;artifactId&gt;ZeRXconf&lt;/artifactId&gt;
-    &lt;version&gt;1.0.2&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;com.github.Ennova-IT&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;ZeRXconf&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;1.0.2&lt;/<span class="pl-ent">version</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h1>
 <a id="how-to-use-zerxconf" class="anchor" href="#how-to-use-zerxconf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use ZeRXconf</h1>
@@ -109,6 +108,14 @@
 <p>Since the Android implementation can be used only from <strong>Android 4.1</strong>, for previous versions of the system it will be automatically used the JmDNS implementation. Unfortunately, if you need to pass custom attributes to the service, Android supports it only from version <strong>5.1 (API 21)</strong> so, in that case, the library will revert to the JmDNS implementation in order to give the desired behaviour.</p>
 </blockquote>
 
+<p><em>Declaration:</em>  </p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">Observable&lt;<span class="pl-smi">NetworkServiceDiscoveryInfo</span>&gt;</span> advertise(@<span class="pl-smi">NonNull</span> <span class="pl-smi">Context</span> context,
+                @<span class="pl-smi">NonNull</span> <span class="pl-smi">String</span> serviceName, @<span class="pl-smi">NonNull</span> <span class="pl-smi">String</span> serviceLayer, <span class="pl-k">int</span> servicePort,
+                @<span class="pl-smi">Nullable</span> <span class="pl-k">Map&lt;<span class="pl-smi">String</span>, <span class="pl-smi">String</span>&gt;</span> attributes)</pre></div>
+
+<p><em>Usage:</em></p>
+
 <div class="highlight highlight-source-java"><pre><span class="pl-smi">Subscription</span> s <span class="pl-k">=</span> <span class="pl-smi">ZeRXconf</span><span class="pl-k">.</span>advertise(context, <span class="pl-s"><span class="pl-pds">"</span>ZeRXconf<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>_http._tcp.<span class="pl-pds">"</span></span>, <span class="pl-c1">1234</span>, getAttributes())
                 .subscribe(onNext, onError);</pre></div>
 
@@ -118,6 +125,12 @@
 <blockquote>
 <p>As per API limitation, listing all the services available in the current network will not allow the components to resolve them. That means that you will have to call the <code>startDiscovery(Context, String)</code> on the specific protocol for having the data resolved correctly. If, when doing so you receive an exception from the <code>DiscoveryListener</code>, make sure you closed the previous <code>Subscription</code> before starting a new one.</p>
 </blockquote>
+
+<p><em>Declaration:</em>  </p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">Observable&lt;<span class="pl-smi">NetworkServiceDiscoveryInfo</span>&gt;</span> startDiscovery(@<span class="pl-smi">NonNull</span> <span class="pl-smi">Context</span> context)</pre></div>
+
+<p><em>Usage:</em></p>
 
 <div class="highlight highlight-source-java"><pre><span class="pl-smi">Subscription</span> s <span class="pl-k">=</span> <span class="pl-smi">ZeRXconf</span><span class="pl-k">.</span>startDiscovery(context)<span class="pl-k">.</span>subscribe(onNext, onError);</pre></div>
 
@@ -131,11 +144,15 @@
 <strong>This method will not throw any other type of exception but it will notifiy you of errors while discovering the services with the usual <code>onError</code> callback</strong></p>
 </blockquote>
 
+<p><em>Declaration:</em>  </p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">Observable&lt;<span class="pl-smi">NetworkServiceDiscoveryInfo</span>&gt;</span> startDiscovery(@<span class="pl-smi">NonNull</span> <span class="pl-smi">Context</span> context,
+                @<span class="pl-smi">NonNull</span> <span class="pl-smi">String</span> protocol) throws <span class="pl-smi">NsdException</span></pre></div>
+
+<p><em>Usage:</em></p>
+
 <div class="highlight highlight-source-java"><pre><span class="pl-smi">Subscription</span> s <span class="pl-k">=</span> <span class="pl-smi">ZeRXconf</span><span class="pl-k">.</span>startDiscovery(context, <span class="pl-s"><span class="pl-pds">"</span>_http._tcp.<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>subscribe(onNext, onError);</pre></div>
 
-<h1>
-<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h1>
-<p>You can find the full JavaDoc of the ZeRXconf project <a href="http://ennova-it.github.io/ZeRXconf/docs/index.html">here.</a>
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
 
