@@ -28,7 +28,7 @@ public class CompatOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDi
     private Subscriber<? super NetworkServiceDiscoveryInfo> subscriber;
     private final String protocol;
     private Context context;
-    private final String SUFFIX = ".local.";
+    private final String SUFFIX = "local.";
 
     private final Action0 dismissAction = new Action0() {
         @Override
@@ -70,10 +70,18 @@ public class CompatOnSubscribeEvent implements OnSubscribeEvent<NetworkServiceDi
 
     private String buildProtocolFrom(String protocol) {
         if (!protocol.endsWith(SUFFIX)) {
-            return protocol + SUFFIX;
+            return addSuffixTo(protocol);
         } else {
             return protocol;
         }
+    }
+
+    @NonNull
+    private String addSuffixTo(String protocol) {
+        if (!protocol.endsWith(".")) {
+            return protocol + "." + SUFFIX;
+        }
+        return protocol + SUFFIX;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class NsdUtils {
     /**
      * This constant is the one that matches the specification of the ZeroConf protocol
      */
-    public static final String NSD_URL_PATTERN = "^_[\\w]+\\._((udp)|(tcp))\\.$";
+    public static final String NSD_URL_PATTERN = "^_[\\w]+\\._((udp)|(tcp))\\.[(local)\\.]*$";
 
     /**
      * This method is the one that will build the {@link NsdServiceInfo} from the

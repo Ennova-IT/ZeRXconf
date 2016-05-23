@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra(SERVICE_RESOLVED, false)) {
             showData(info);
         } else {
-            subscription = ZeRXconf.startDiscovery(this, NsdUtils.cleanProtocolOf(info)).subscribe(onServiceResolved, onError);
+            subscription = ZeRXconf.startDiscovery(this, NsdUtils.cleanProtocolOf(info), true).subscribe(onServiceResolved, onError);
         }
     }
 

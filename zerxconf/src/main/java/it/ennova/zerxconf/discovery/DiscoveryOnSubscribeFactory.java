@@ -32,6 +32,17 @@ public class DiscoveryOnSubscribeFactory {
         }
     }
 
+    public static Observable<NetworkServiceDiscoveryInfo> from(@NonNull Context context,
+                                                               @NonNull String protocol,
+                                                               boolean needsTxtRecord) {
+
+        if (needsTxtRecord) {
+            return buildCompatObservableFrom(context, protocol);
+        } else {
+            return from(context, protocol);
+        }
+    }
+
     private static Observable<NetworkServiceDiscoveryInfo> buildJBObservableFrom(Context context, String protocol) {
         return buildNewJBObservableFrom(context, protocol)
                 .concatMap(JBDiscoveryServiceResolver.with(context))

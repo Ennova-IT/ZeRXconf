@@ -92,7 +92,7 @@ public class DiscoveryFragment extends Fragment implements OnServiceSelectedList
         if (TextUtils.isEmpty(txtServiceLayer.getText())) {
             subscription = ZeRXconf.startDiscovery(getActivity()).subscribe(onNext, onError);
         } else {
-            subscription = ZeRXconf.startDiscovery(getActivity(), txtServiceLayer.getText().toString())
+            subscription = ZeRXconf.startDiscovery(getActivity(), txtServiceLayer.getText().toString(), true)
                     .subscribe(onNext, onError);
         }
 

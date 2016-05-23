@@ -55,15 +55,16 @@ public class ZeRXconf {
      * This method is the one that shall be used in order to discover all the services available in
      * the current network. By default, this call will be executed on a proper Scheduler and return
      * the results onto the main thread.<br/>
-     *
+     * <p/>
      * <b>Note</b>: as per API limitation, listing all the services available in the current network
      * will not allow the components to resolve them. That means that you will have to call the
      * {@link #startDiscovery(Context, String)} on the specific protocol for having the data resolved
      * correctly. If, when doing so you receive an exception from the {@link android.net.nsd.NsdManager.DiscoveryListener},
      * make sure you closed the previous {@link rx.Subscription} before starting a new one.<br/>
-     *
+     * <p/>
      * <b>Note</b>: this method is making use of the {@link #ALL_AVAILABLE_SERVICES} constant to discover
      * all the services in the available network
+     *
      * @param context needed in order to retrieve the service for native API
      * @return an {@link Observable} that will emit all the different services found on the current
      * network
@@ -77,14 +78,12 @@ public class ZeRXconf {
      * the current network for a given protocol. By default, this call will be executed on a proper
      * Scheduler and return the results onto the main thread.<br/>
      *
-     *
-     * @param context needed in order to retrieve the service for native API
+     * @param context  needed in order to retrieve the service for native API
      * @param protocol the requested protocol
      * @return an {@link Observable} that will emit all the instances of the service matching the
      * given protocol found on the current network
-     *
      * @throws NsdException if {@code protocol} equals {@link #ALL_AVAILABLE_SERVICES} or the
-     * "_services._dns-sd._udp" value
+     *                      "_services._dns-sd._udp" value
      */
     public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(
             @NonNull Context context, @NonNull String protocol) throws NsdException {
@@ -94,6 +93,29 @@ public class ZeRXconf {
         }
 
         return DiscoveryOnSubscribeFactory.from(context, protocol);
+    }
+
+    /**
+     * This method is the one that shall be used in order to discover all the services available in
+     * the current network for a given protocol. By default, this call will be executed on a proper
+     * Scheduler and return the results onto the main thread.<br/>
+     *
+     * @param context        needed in order to retrieve the service for native API
+     * @param protocol       the requested protocol
+     * @param needsTxtRecord specifies if the discovery needs to use custom attributes
+     * @return an {@link Observable} that will emit all the instances of the service matching the
+     * given protocol found on the current network
+     * @throws NsdException if {@code protocol} equals {@link #ALL_AVAILABLE_SERVICES} or the
+     *                      "_services._dns-sd._udp" value
+     */
+    public static Observable<NetworkServiceDiscoveryInfo> startDiscovery(
+            @NonNull Context context, @NonNull String protocol, boolean needsTxtRecord) throws NsdException {
+
+        if (protocol.equalsIgnoreCase(ALL_AVAILABLE_SERVICES)) {
+            throw new NsdException(NsdException.INVALID_ARGUMENT, protocol, 0);
+        }
+
+        return DiscoveryOnSubscribeFactory.from(context, protocol, needsTxtRecord);
     }
 
 }
