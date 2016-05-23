@@ -2,7 +2,7 @@
 This library has been built in order to provide a Reactive wrapper around the Android [Network Service Discovery][nsd] API and the [JmDNS implementation][jmdns] for older devices.  
 
 ![Compatibility: Android 2.3+](https://img.shields.io/badge/compatibility-Android%202.3%2B-green.svg)
-![Version: 1.0.1](https://img.shields.io/badge/version-1.0.1-green.svg)
+![Version: 1.0.3](https://img.shields.io/badge/version-1.0.3-green.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ZeRXConf-green.svg?style=true)](https://android-arsenal.com/details/1/3220)
 ## What is Zeroconf
@@ -30,7 +30,7 @@ Import the library in your app's module ```build.gradle```
 ```groovy
 dependencies {
     ...
-    compile 'com.github.Ennova-IT:ZeRXconf:1.0.2'
+    compile 'com.github.Ennova-IT:ZeRXconf:1.0.3'
 }
 ```
 
